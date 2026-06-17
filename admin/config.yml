@@ -1,0 +1,33 @@
+# Pannello di gestione (Decap CMS). Sostituisci OWNER/REPO con il repo GitHub reale.
+backend:
+  name: github
+  repo: francoleoni-web/mascarella-house-site
+  branch: main
+  commit_messages:
+    update: 'Aggiorno disponibilità dal pannello'
+
+locale: it
+load_config_file: true
+media_folder: assets/img
+public_folder: assets/img
+
+collections:
+  - name: gestione
+    label: Gestione
+    files:
+      - name: disponibilita
+        label: 'Disponibilità — date occupate'
+        file: availability.json
+        format: json
+        description: 'Aggiungi o rimuovi i periodi in cui l''alloggio è già occupato.'
+        fields:
+          - { name: minNights, label: 'Soggiorno minimo (notti)', widget: number, default: 2, min: 1 }
+          - { name: contactEmail, label: 'Email per le richieste', widget: string }
+          - name: booked
+            label: 'Periodi occupati'
+            label_singular: 'Periodo occupato'
+            widget: list
+            summary: 'Dal {{fields.from}} al {{fields.to}}'
+            fields:
+              - { name: from, label: 'Dal (check-in occupato)', widget: datetime, format: 'YYYY-MM-DD', date_format: 'YYYY-MM-DD', time_format: false, picker_utc: true }
+              - { name: to, label: 'Al (ultima notte occupata)', widget: datetime, format: 'YYYY-MM-DD', date_format: 'YYYY-MM-DD', time_format: false, picker_utc: true }
