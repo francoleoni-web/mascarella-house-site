@@ -2,41 +2,44 @@
   "use strict";
 
   /* ============================================================
-     DATI SPECIFICI DELL'ALLOGGIO — riempi questi due array.
-     Le foto vanno scaricate in assets/img/ (vedi SKILL.md).
+     DATI SPECIFICI DELL'ALLOGGIO.
+     I testi tradotti stanno in js/i18n.js (window.I18N).
+     Qui restano solo gli elementi non testuali: file foto,
+     classi della griglia, icone dei servizi e della posizione.
      ============================================================ */
-  var PHOTOS = [
-    { src: "assets/img/photo-07.jpg", cap: "Cucina abitabile e zona pranzo", cls: "g-big" },
-    { src: "assets/img/photo-08.jpg", cap: "Camera matrimoniale" },
-    { src: "assets/img/photo-04.jpg", cap: "Studio con divani letto", cls: "g-wide" },
-    { src: "assets/img/photo-09.jpg", cap: "Seconda camera matrimoniale" },
-    { src: "assets/img/photo-02.jpg", cap: "Camera con letti singoli" },
-    { src: "assets/img/photo-03.jpg", cap: "Camera tripla con scrivania" },
-    { src: "assets/img/photo-06.jpg", cap: "Soggiorno con divani letto", cls: "g-wide" },
-    { src: "assets/img/photo-10.jpg", cap: "Bagno con vasca" },
-    { src: "assets/img/photo-11.jpg", cap: "Corridoio interno" },
-    { src: "assets/img/photo-05.jpg", cap: "Ingresso" },
-    { src: "assets/img/photo-01.jpg", cap: "Secondo bagno con lavanderia" },
+  var PHOTO_SRC = [
+    { src: "assets/img/photo-07.jpg", cls: "g-big" },
+    { src: "assets/img/photo-08.jpg" },
+    { src: "assets/img/photo-04.jpg", cls: "g-wide" },
+    { src: "assets/img/photo-09.jpg" },
+    { src: "assets/img/photo-02.jpg" },
+    { src: "assets/img/photo-03.jpg" },
+    { src: "assets/img/photo-06.jpg", cls: "g-wide" },
+    { src: "assets/img/photo-10.jpg" },
+    { src: "assets/img/photo-11.jpg" },
+    { src: "assets/img/photo-05.jpg" },
+    { src: "assets/img/photo-01.jpg" }
   ];
 
-  var AMENITIES = [
-    { ic: "📶", t: "Wi-Fi gratuito" },
-    { ic: "❄️", t: "Aria condizionata" },
-    { ic: "🔥", t: "Riscaldamento a pannelli radianti" },
-    { ic: "📺", t: "Smart TV" },
-    { ic: "🛗", t: "Ascensore" },
-    { ic: "🍳", t: "Cucina completamente attrezzata" },
-    { ic: "🍽️", t: "Lavastoviglie" },
-    { ic: "🧺", t: "Lavatrice" },
-    { ic: "🌀", t: "Asciugatrice" },
-    { ic: "💼", t: "Spazio di lavoro dedicato" },
-    { ic: "🛁", t: "2 bagni (vasca e doccia)" },
-    { ic: "🧴", t: "Biancheria e set di asciugamani" },
-    { ic: "🔑", t: "Self check-in con cassetta delle chiavi" },
-    { ic: "🅿️", t: "Posto auto in loco (a pagamento)" },
-    { ic: "🔌", t: "Ricarica Tesla / Type 2 (su richiesta)" },
-    { ic: "🧯", t: "Estintore e rilevatori di sicurezza" },
-  ];
+  var AMENITY_ICONS = ["📶","❄️","🔥","📺","🛗","🍳","🍽️","🧺","🌀","💼","🛁","🧴","🔑","🅿️","🔌","🧯"];
+  var LOC_ICONS = ["🚉","🏛️","🍝","🚗","🚆"];
+
+  /* ---------- I18N CORE ---------- */
+  var I18N = window.I18N || { it: {} };
+  var STORE_KEY = "m89_lang";
+  function pickLang() {
+    var saved = null;
+    try { saved = localStorage.getItem(STORE_KEY); } catch (e) {}
+    if (saved && I18N[saved]) return saved;
+    var nav = (navigator.language || "it").slice(0, 2).toLowerCase();
+    return I18N[nav] ? nav : "it";
+  }
+  var LANG = pickLang();
+  function t(key) {
+    var d = I18N[LANG] || I18N.it;
+    return (key in d) ? d[key] : (I18N.it[key] !== undefined ? I18N.it[key] : "");
+  }
+  function capOf(i) { var p = t("photos"); return (p && p[i]) || ""; }
 
   // Caricamento disponibilità dal file gestito dal pannello /admin.
   fetch("availability.json", { cache: "no-store" })
@@ -49,6 +52,7 @@
   function boot(cfg) {
   /* ---------- HELPERS ---------- */
   var $ = function (s, c) { return (c || document).querySelector(s); };
+  var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
   var pad = function (n) { return n < 10 ? "0" + n : "" + n; };
   var ymd = function (d) { return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()); };
   var parseD = function (s) { var p = s.split("-"); return new Date(+p[0], +p[1] - 1, +p[2]); };
@@ -65,21 +69,25 @@
 
   /* ---------- GALLERY ---------- */
   var grid = $("#galleryGrid");
-  if (grid) PHOTOS.forEach(function (p, i) {
-    var fig = document.createElement("figure");
-    if (p.cls) fig.className = p.cls;
-    fig.dataset.index = i;
-    var img = document.createElement("img");
-    img.src = p.src; img.alt = p.cap; img.loading = "lazy";
-    fig.appendChild(img);
-    grid.appendChild(fig);
-  });
+  function buildGallery() {
+    if (!grid) return;
+    grid.innerHTML = "";
+    PHOTO_SRC.forEach(function (p, i) {
+      var fig = document.createElement("figure");
+      if (p.cls) fig.className = p.cls;
+      fig.dataset.index = i;
+      var img = document.createElement("img");
+      img.src = p.src; img.alt = capOf(i); img.loading = "lazy";
+      fig.appendChild(img);
+      grid.appendChild(fig);
+    });
+  }
 
   /* ---------- LIGHTBOX ---------- */
   var lb = $("#lightbox"), lbImg = $("#lbImg"), cur = 0;
-  function openLb(i) { cur = i; lbImg.src = PHOTOS[i].src; lbImg.alt = PHOTOS[i].cap; lb.hidden = false; document.body.style.overflow = "hidden"; }
+  function openLb(i) { cur = i; lbImg.src = PHOTO_SRC[i].src; lbImg.alt = capOf(i); lb.hidden = false; document.body.style.overflow = "hidden"; }
   function closeLb() { lb.hidden = true; document.body.style.overflow = ""; }
-  function step(n) { cur = (cur + n + PHOTOS.length) % PHOTOS.length; lbImg.src = PHOTOS[cur].src; lbImg.alt = PHOTOS[cur].cap; }
+  function step(n) { cur = (cur + n + PHOTO_SRC.length) % PHOTO_SRC.length; lbImg.src = PHOTO_SRC[cur].src; lbImg.alt = capOf(cur); }
   if (grid && lb) {
     grid.addEventListener("click", function (e) {
       var fig = e.target.closest("figure"); if (fig) openLb(+fig.dataset.index);
@@ -98,19 +106,38 @@
 
   /* ---------- AMENITIES ---------- */
   var aGrid = $("#amenitiesGrid");
-  if (aGrid) AMENITIES.forEach(function (a) {
-    var li = document.createElement("li");
-    li.innerHTML = '<span class="ic">' + a.ic + '</span><span>' + a.t + "</span>";
-    aGrid.appendChild(li);
-  });
+  function buildAmenities() {
+    if (!aGrid) return;
+    aGrid.innerHTML = "";
+    var labels = t("amenities") || [];
+    AMENITY_ICONS.forEach(function (ic, i) {
+      var li = document.createElement("li");
+      li.innerHTML = '<span class="ic">' + ic + '</span><span></span>';
+      li.lastChild.textContent = labels[i] || "";
+      aGrid.appendChild(li);
+    });
+  }
+
+  /* ---------- LOCATION POINTS ---------- */
+  var locList = $("#locationList");
+  function buildLocation() {
+    if (!locList) return;
+    locList.innerHTML = "";
+    var pts = t("locpoints") || [];
+    LOC_ICONS.forEach(function (ic, i) {
+      var li = document.createElement("li");
+      li.innerHTML = '<span>' + ic + '</span> <span></span>';
+      li.lastChild.textContent = pts[i] || "";
+      locList.appendChild(li);
+    });
+  }
 
   /* ---------- CALENDAR ---------- */
-  var WD = ["Lun", "Mar", "Mer", "Gio", "Ven", "Sab", "Dom"];
-  var MO = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"];
   var view = new Date(today.getFullYear(), today.getMonth(), 1);
   var selStart = null, selEnd = null;
 
   function buildMonth(base) {
+    var WD = t("weekdays");
     var wrap = document.createElement("div");
     wrap.className = "cal-grid";
     var week = document.createElement("div");
@@ -154,10 +181,15 @@
     return false;
   }
 
-  function fmt(s) { var d = parseD(s); return d.getDate() + " " + MO[d.getMonth()].slice(0, 3).toLowerCase() + " " + d.getFullYear(); }
+  function fmt(s) {
+    var MO = t("months");
+    var d = parseD(s);
+    return d.getDate() + " " + MO[d.getMonth()].slice(0, 3).toLowerCase() + " " + d.getFullYear();
+  }
 
   function render() {
     if (!$("#calGrids")) return;
+    var MO = t("months");
     var months = $("#calMonths");
     var m2 = new Date(view.getFullYear(), view.getMonth() + 1, 1);
     months.innerHTML = "<span>" + MO[view.getMonth()] + " " + view.getFullYear() +
@@ -171,11 +203,14 @@
     var sel = $("#calSelection");
     if (selStart && selEnd) {
       var n = Math.round((parseD(selEnd) - parseD(selStart)) / 86400000);
-      sel.textContent = "Dal " + fmt(selStart) + " al " + fmt(selEnd) + " · " + n + (n === 1 ? " notte" : " notti");
+      var unit = n === 1 ? t("night") : t("nights");
+      sel.textContent = t("cal_range")
+        .replace("{from}", fmt(selStart)).replace("{to}", fmt(selEnd))
+        .replace("{n}", n).replace("{unit}", unit);
     } else if (selStart) {
-      sel.textContent = "Check-in: " + fmt(selStart) + " — scegli il check-out";
+      sel.textContent = t("cal_prompt").replace("{d}", fmt(selStart));
     } else {
-      sel.textContent = "Nessuna data selezionata";
+      sel.textContent = t("cal_none");
     }
   }
 
@@ -200,7 +235,6 @@
     $("#calNext").addEventListener("click", function () {
       view = new Date(view.getFullYear(), view.getMonth() + 1, 1); render();
     });
-    render();
   }
 
   /* ---------- FORM (mailto) ---------- */
@@ -208,20 +242,56 @@
   if (form) form.addEventListener("submit", function (e) {
     e.preventDefault();
     var f = e.target;
-    var subject = "Richiesta soggiorno";
     var body =
-      "Nome: " + f.name.value + "\n" +
-      "Email: " + f.email.value + "\n" +
-      "Check-in: " + (f.checkin.value || "—") + "\n" +
-      "Check-out: " + (f.checkout.value || "—") + "\n" +
-      "Ospiti: " + f.guests.value + "\n\n" +
-      "Messaggio:\n" + (f.message.value || "—");
+      t("form_name") + ": " + f.name.value + "\n" +
+      t("form_email") + ": " + f.email.value + "\n" +
+      t("form_in") + ": " + (f.checkin.value || "—") + "\n" +
+      t("form_out") + ": " + (f.checkout.value || "—") + "\n" +
+      t("form_guests") + ": " + f.guests.value + "\n\n" +
+      t("form_msg") + ":\n" + (f.message.value || "—");
     window.location.href = "mailto:" + (cfg.contactEmail || "") +
-      "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
-    if ($("#bookNote")) $("#bookNote").textContent = "Si aprirà il tuo programma di posta con la richiesta precompilata.";
+      "?subject=" + encodeURIComponent(t("mail_subject")) + "&body=" + encodeURIComponent(body);
+    if ($("#bookNote")) $("#bookNote").textContent = t("form_note");
   });
+
+  /* ---------- APPLICA TRADUZIONI ---------- */
+  function applyI18n() {
+    var d = I18N[LANG] || I18N.it;
+    document.documentElement.lang = LANG;
+    document.documentElement.dir = d._dir || "ltr";
+    $$("[data-i18n]").forEach(function (el) {
+      var v = t(el.getAttribute("data-i18n"));
+      if (typeof v === "string") el.textContent = v;
+    });
+    $$("[data-i18n-ph]").forEach(function (el) {
+      var v = t(el.getAttribute("data-i18n-ph"));
+      if (typeof v === "string") el.setAttribute("placeholder", v);
+    });
+    buildGallery();
+    buildAmenities();
+    buildLocation();
+    render();
+  }
+
+  /* ---------- SELETTORE LINGUA ---------- */
+  var sel = $("#langSelect");
+  if (sel) {
+    Object.keys(I18N).forEach(function (code) {
+      var o = document.createElement("option");
+      o.value = code; o.textContent = I18N[code]._label || code.toUpperCase();
+      sel.appendChild(o);
+    });
+    sel.value = LANG;
+    sel.addEventListener("change", function () {
+      LANG = I18N[sel.value] ? sel.value : "it";
+      try { localStorage.setItem(STORE_KEY, LANG); } catch (e) {}
+      applyI18n();
+    });
+  }
 
   /* ---------- MISC ---------- */
   if ($("#year")) $("#year").textContent = new Date().getFullYear();
+
+  applyI18n();
   } // end boot
 })();

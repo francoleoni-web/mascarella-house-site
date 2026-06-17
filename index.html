@@ -19,13 +19,14 @@
     <div class="container nav__inner">
       <a href="#top" class="brand">Mascarella <span>89</span></a>
       <nav class="nav__links">
-        <a href="#gallery">Foto</a>
-        <a href="#about">L'alloggio</a>
-        <a href="#amenities">Servizi</a>
-        <a href="#calendar">Disponibilità</a>
-        <a href="#location">Dove siamo</a>
+        <a href="#gallery" data-i18n="nav_photos">Foto</a>
+        <a href="#about" data-i18n="nav_about">L'alloggio</a>
+        <a href="#amenities" data-i18n="nav_amenities">Servizi</a>
+        <a href="#calendar" data-i18n="nav_calendar">Disponibilità</a>
+        <a href="#location" data-i18n="nav_location">Dove siamo</a>
       </nav>
-      <a href="#book" class="btn btn--small">Prenota</a>
+      <select id="langSelect" class="lang-select" aria-label="Language / Lingua"></select>
+      <a href="#book" class="btn btn--small" data-i18n="nav_book">Prenota</a>
     </div>
   </header>
 
@@ -35,35 +36,35 @@
       <div class="hero__overlay"></div>
     </div>
     <div class="container hero__content">
-      <p class="hero__eyebrow">Bologna · Centro</p>
+      <p class="hero__eyebrow" data-i18n="hero_eyebrow">Bologna · Centro</p>
       <h1>Mascarella 89</h1>
-      <p class="hero__tagline">Appartamento luminoso all'ultimo piano, a 10 minuti a piedi dalla Stazione Centrale.</p>
+      <p class="hero__tagline" data-i18n="hero_tagline">Appartamento luminoso all'ultimo piano, a 10 minuti a piedi dalla Stazione Centrale.</p>
       <div class="hero__meta">
-        <span>Intero appartamento</span>
+        <span data-i18n="hero_type">Intero appartamento</span>
         <span class="dot">•</span>
-        <span>5 ospiti</span>
+        <span data-i18n="hero_guests">5 ospiti</span>
       </div>
       <div class="hero__cta">
-        <a href="#book" class="btn">Verifica disponibilità</a>
-        <a href="#gallery" class="btn btn--ghost">Guarda le foto</a>
+        <a href="#book" class="btn" data-i18n="cta1">Verifica disponibilità</a>
+        <a href="#gallery" class="btn btn--ghost" data-i18n="cta2">Guarda le foto</a>
       </div>
     </div>
   </section>
 
   <section class="facts">
     <div class="container facts__grid">
-      <div class="fact"><span class="fact__num">5</span><span class="fact__label">Ospiti</span></div>
-      <div class="fact"><span class="fact__num">2</span><span class="fact__label">Camere</span></div>
-      <div class="fact"><span class="fact__num">4</span><span class="fact__label">Letti</span></div>
-      <div class="fact"><span class="fact__num">2</span><span class="fact__label">Bagni</span></div>
-      <div class="fact"><span class="fact__num">★</span><span class="fact__label">10′ dalla Stazione</span></div>
+      <div class="fact"><span class="fact__num">5</span><span class="fact__label" data-i18n="f_guests">Ospiti</span></div>
+      <div class="fact"><span class="fact__num">2</span><span class="fact__label" data-i18n="f_bedrooms">Camere</span></div>
+      <div class="fact"><span class="fact__num">4</span><span class="fact__label" data-i18n="f_beds">Letti</span></div>
+      <div class="fact"><span class="fact__num">2</span><span class="fact__label" data-i18n="f_baths">Bagni</span></div>
+      <div class="fact"><span class="fact__num">★</span><span class="fact__label" data-i18n="f_highlight">10′ dalla Stazione</span></div>
     </div>
   </section>
 
   <section id="gallery" class="section">
     <div class="container">
-      <h2 class="section__title">Galleria fotografica</h2>
-      <p class="section__sub">Gli ambienti dell'appartamento, al quarto e ultimo piano.</p>
+      <h2 class="section__title" data-i18n="gallery_title">Galleria fotografica</h2>
+      <p class="section__sub" data-i18n="gallery_sub">Gli ambienti dell'appartamento, al quarto e ultimo piano.</p>
       <div class="gallery" id="galleryGrid"></div>
     </div>
   </section>
@@ -71,40 +72,40 @@
   <section id="about" class="section section--alt">
     <div class="container about">
       <div class="about__text">
-        <h2 class="section__title">L'alloggio</h2>
-        <p>Mascarella 89 è un appartamento luminoso e accogliente nel cuore di Bologna, perfetto per le famiglie e a soli 10 minuti a piedi dalla Stazione Centrale. Dispone di due confortevoli camere da letto, per un totale di quattro posti letto, oltre a tre divani letto matrimoniali, una cucina privata completamente attrezzata, due bagni e uno studio. Si trova al quarto e ultimo piano dell'edificio, facilmente raggiungibile con l'ascensore.</p>
-        <h3>Lo spazio</h3>
-        <p>Le camere da letto sono dotate di piumoni, lenzuola, cuscini e un set di tre asciugamani a persona. Ogni letto ha il proprio armadio con grucce. Gli ospiti hanno a disposizione aria condizionata, Wi-Fi gratuito e Smart TV, lavatrice e asciugatrice, e una terrazza dove stendere il bucato.</p>
-        <h3>L'accesso</h3>
-        <p>Al quarto piano, lungo il corridoio interno, si trovano gli ingressi dell'appartamento. La prima parte comprende una camera matrimoniale, un bagno con vasca e una cucina abitabile con tavolo per 5 persone, divano letto, lavastoviglie, microonde, piano cottura a gas, forno e Smart TV. Il check-in è autonomo, tramite cassetta delle chiavi.</p>
-        <h3>Parcheggio e ricarica</h3>
-        <p>Su richiesta e a costo aggiuntivo è disponibile un posto auto al piano strada all'interno del condominio, dotato di wall box Tesla (connettore Type 2). Per accedere in auto alla zona è necessario il permesso ZTL del Comune di Bologna.</p>
+        <h2 class="section__title" data-i18n="about_title">L'alloggio</h2>
+        <p data-i18n="about_p1">Mascarella 89 è un appartamento luminoso e accogliente nel cuore di Bologna, perfetto per le famiglie e a soli 10 minuti a piedi dalla Stazione Centrale. Dispone di due confortevoli camere da letto, per un totale di quattro posti letto, oltre a tre divani letto matrimoniali, una cucina privata completamente attrezzata, due bagni e uno studio. Si trova al quarto e ultimo piano dell'edificio, facilmente raggiungibile con l'ascensore.</p>
+        <h3 data-i18n="about_h2">Lo spazio</h3>
+        <p data-i18n="about_p2">Le camere da letto sono dotate di piumoni, lenzuola, cuscini e un set di tre asciugamani a persona. Ogni letto ha il proprio armadio con grucce. Gli ospiti hanno a disposizione aria condizionata, Wi-Fi gratuito e Smart TV, lavatrice e asciugatrice, e una terrazza dove stendere il bucato.</p>
+        <h3 data-i18n="about_h3">L'accesso</h3>
+        <p data-i18n="about_p3">Al quarto piano, lungo il corridoio interno, si trovano gli ingressi dell'appartamento. La prima parte comprende una camera matrimoniale, un bagno con vasca e una cucina abitabile con tavolo per 5 persone, divano letto, lavastoviglie, microonde, piano cottura a gas, forno e Smart TV. Il check-in è autonomo, tramite cassetta delle chiavi.</p>
+        <h3 data-i18n="about_h4">Parcheggio e ricarica</h3>
+        <p data-i18n="about_p4">Su richiesta e a costo aggiuntivo è disponibile un posto auto al piano strada all'interno del condominio, dotato di wall box Tesla (connettore Type 2). Per accedere in auto alla zona è necessario il permesso ZTL del Comune di Bologna.</p>
       </div>
       <aside class="about__card">
-        <p class="about__host">Il tuo host è <strong>Franco</strong></p>
+        <p class="about__host"><span data-i18n="card_host">Il tuo host è</span> <strong>Franco</strong></p>
         <ul class="about__list">
-          <li><span>Check-in</span><strong>Dalle 16:00 · self check-in</strong></li>
-          <li><span>Tipologia</span><strong>Intero appartamento</strong></li>
-          <li><span>Ospiti</span><strong>5</strong></li>
-          <li><span>Piano</span><strong>4° e ultimo, con ascensore</strong></li>
+          <li><span data-i18n="card_checkin_l">Check-in</span><strong data-i18n="card_checkin_v">Dalle 16:00 · self check-in</strong></li>
+          <li><span data-i18n="card_type_l">Tipologia</span><strong data-i18n="card_type_v">Intero appartamento</strong></li>
+          <li><span data-i18n="card_guests_l">Ospiti</span><strong data-i18n="card_guests_v">5</strong></li>
+          <li><span data-i18n="card_floor_l">Piano</span><strong data-i18n="card_floor_v">4° e ultimo, con ascensore</strong></li>
         </ul>
-        <a href="#book" class="btn btn--block">Richiedi le date</a>
+        <a href="#book" class="btn btn--block" data-i18n="card_cta">Richiedi le date</a>
       </aside>
     </div>
   </section>
 
   <section id="amenities" class="section">
     <div class="container">
-      <h2 class="section__title">Servizi e dotazioni</h2>
-      <p class="section__sub">Tutto il necessario per un soggiorno comodo.</p>
+      <h2 class="section__title" data-i18n="am_title">Servizi e dotazioni</h2>
+      <p class="section__sub" data-i18n="am_sub">Tutto il necessario per un soggiorno comodo.</p>
       <ul class="amenities" id="amenitiesGrid"></ul>
     </div>
   </section>
 
   <section id="calendar" class="section section--alt">
     <div class="container">
-      <h2 class="section__title">Disponibilità</h2>
-      <p class="section__sub">Le date in grigio sono già occupate. Seleziona check-in e check-out per inviare una richiesta.</p>
+      <h2 class="section__title" data-i18n="cal_title">Disponibilità</h2>
+      <p class="section__sub" data-i18n="cal_sub">Le date in grigio sono già occupate. Seleziona check-in e check-out per inviare una richiesta.</p>
       <div class="calendar">
         <div class="calendar__header">
           <button class="cal-nav" id="calPrev" aria-label="Mese precedente">‹</button>
@@ -114,11 +115,11 @@
         <div class="cal-grids" id="calGrids"></div>
         <div class="calendar__footer">
           <div class="cal-legend">
-            <span><i class="sw sw--free"></i> Libero</span>
-            <span><i class="sw sw--busy"></i> Occupato</span>
-            <span><i class="sw sw--sel"></i> Selezionato</span>
+            <span><i class="sw sw--free"></i> <span data-i18n="cal_free">Libero</span></span>
+            <span><i class="sw sw--busy"></i> <span data-i18n="cal_busy">Occupato</span></span>
+            <span><i class="sw sw--sel"></i> <span data-i18n="cal_sel">Selezionato</span></span>
           </div>
-          <p class="cal-selection" id="calSelection">Nessuna data selezionata</p>
+          <p class="cal-selection" id="calSelection" data-i18n="cal_none">Nessuna data selezionata</p>
         </div>
       </div>
     </div>
@@ -126,21 +127,15 @@
 
   <section id="location" class="section">
     <div class="container">
-      <h2 class="section__title">Dove siamo</h2>
-      <p class="section__sub">Nel cuore di Bologna, a pochi minuti a piedi dalla Stazione Centrale e dal centro storico.</p>
+      <h2 class="section__title" data-i18n="loc_title">Dove siamo</h2>
+      <p class="section__sub" data-i18n="loc_sub">Nel cuore di Bologna, a pochi minuti a piedi dalla Stazione Centrale e dal centro storico.</p>
       <div class="location">
         <div class="location__map">
           <iframe title="Mappa" loading="lazy"
             src="https://www.openstreetmap.org/export/embed.html?bbox=11.3428,44.4965,11.3628,44.5065&amp;layer=mapnik&amp;marker=44.5015%2C11.3528"></iframe>
-          <a class="location__maplink" href="https://www.openstreetmap.org/?mlat=44.5015&mlon=11.3528#map=15/44.5015/11.3528" target="_blank" rel="noopener">Apri mappa più grande ↗</a>
+          <a class="location__maplink" href="https://www.openstreetmap.org/?mlat=44.5015&mlon=11.3528#map=15/44.5015/11.3528" target="_blank" rel="noopener" data-i18n="loc_maplink">Apri mappa più grande ↗</a>
         </div>
-        <ul class="location__list">
-          <li><span>🚉</span> Stazione Centrale a 10 minuti a piedi</li>
-          <li><span>🏛️</span> Centro storico e Zona Universitaria a pochi passi</li>
-          <li><span>🍝</span> Piazza Maggiore, Due Torri e Quadrilatero raggiungibili a piedi</li>
-          <li><span>🚗</span> Posto auto in loco con ricarica Tesla (su richiesta)</li>
-          <li><span>🚆</span> Collegamenti rapidi per Firenze, Milano e Venezia</li>
-        </ul>
+        <ul class="location__list" id="locationList"></ul>
       </div>
     </div>
   </section>
@@ -148,21 +143,21 @@
   <section id="book" class="section section--cta">
     <div class="container book">
       <div class="book__intro">
-        <h2 class="section__title">Prenota il tuo soggiorno</h2>
-        <p>Invia una richiesta con le tue date oppure contatta direttamente l'host su WhatsApp.</p>
+        <h2 class="section__title" data-i18n="book_title">Prenota il tuo soggiorno</h2>
+        <p data-i18n="book_intro">Invia una richiesta con le tue date oppure contatta direttamente l'host su WhatsApp.</p>
         <div class="book__contacts">
           <a class="btn btn--wa" href="https://wa.me/393497569078" target="_blank" rel="noopener">WhatsApp +39 349 7569078</a>
-          <a class="btn btn--ghost" href="mailto:info@mascarella89.com">Email</a>
+          <a class="btn btn--ghost" href="mailto:info@mascarella89.com" data-i18n="book_email">Email</a>
         </div>
       </div>
       <form class="book__form" id="bookForm">
-        <div class="field"><label for="fName">Nome</label><input id="fName" name="name" type="text" required placeholder="Il tuo nome" /></div>
-        <div class="field"><label for="fEmail">Email</label><input id="fEmail" name="email" type="email" required placeholder="nome@email.it" /></div>
-        <div class="field field--half"><label for="fIn">Check-in</label><input id="fIn" name="checkin" type="date" /></div>
-        <div class="field field--half"><label for="fOut">Check-out</label><input id="fOut" name="checkout" type="date" /></div>
-        <div class="field"><label for="fGuests">Ospiti</label><select id="fGuests" name="guests"><option>1</option><option selected>2</option><option>3</option><option>4</option><option>5</option></select></div>
-        <div class="field"><label for="fMsg">Messaggio</label><textarea id="fMsg" name="message" rows="3" placeholder="Raccontaci qualcosa sul tuo soggiorno…"></textarea></div>
-        <button type="submit" class="btn btn--block">Invia richiesta</button>
+        <div class="field"><label for="fName" data-i18n="form_name">Nome</label><input id="fName" name="name" type="text" required placeholder="Il tuo nome" data-i18n-ph="form_name_ph" /></div>
+        <div class="field"><label for="fEmail" data-i18n="form_email">Email</label><input id="fEmail" name="email" type="email" required placeholder="nome@email.it" data-i18n-ph="form_email_ph" /></div>
+        <div class="field field--half"><label for="fIn" data-i18n="form_in">Check-in</label><input id="fIn" name="checkin" type="date" /></div>
+        <div class="field field--half"><label for="fOut" data-i18n="form_out">Check-out</label><input id="fOut" name="checkout" type="date" /></div>
+        <div class="field"><label for="fGuests" data-i18n="form_guests">Ospiti</label><select id="fGuests" name="guests"><option>1</option><option selected>2</option><option>3</option><option>4</option><option>5</option></select></div>
+        <div class="field"><label for="fMsg" data-i18n="form_msg">Messaggio</label><textarea id="fMsg" name="message" rows="3" placeholder="Raccontaci qualcosa sul tuo soggiorno…" data-i18n-ph="form_msg_ph"></textarea></div>
+        <button type="submit" class="btn btn--block" data-i18n="form_submit">Invia richiesta</button>
         <p class="book__note" id="bookNote"></p>
       </form>
     </div>
@@ -172,15 +167,15 @@
     <div class="container footer__inner">
       <div>
         <span class="brand brand--footer">Mascarella <span>89</span></span>
-        <p>Intero appartamento · Bologna Centro</p>
+        <p data-i18n="footer_type">Intero appartamento · Bologna Centro</p>
       </div>
       <div class="footer__links">
         <a href="https://wa.me/393497569078" target="_blank" rel="noopener">WhatsApp</a>
-        <a href="mailto:info@mascarella89.com">Email</a>
-        <a href="#top">Torna su</a>
+        <a href="mailto:info@mascarella89.com" data-i18n="book_email">Email</a>
+        <a href="#top" aria-label="Top">↑</a>
       </div>
     </div>
-    <p class="footer__legal">© <span id="year"></span> Mascarella 89. Foto e testi dell'host.</p>
+    <p class="footer__legal">© <span id="year"></span> Mascarella 89. <span data-i18n="footer_legal">Foto e testi dell'host.</span></p>
   </footer>
 
   <div class="lightbox" id="lightbox" hidden>
@@ -190,6 +185,7 @@
     <button class="lb-nav lb-next" id="lbNext" aria-label="Successiva">›</button>
   </div>
 
+  <script src="js/i18n.js"></script>
   <script src="js/main.js"></script>
 </body>
 </html>
