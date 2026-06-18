@@ -54,7 +54,13 @@
       .catch(function () { return null; })
   ]).then(function (res) {
     var cfg = res[0] || { booked: [], contactEmail: "" };
-    if (res[1] && Array.isArray(res[1].booked)) cfg.booked = res[1].booked;
+    var feed = res[1];
+    if (feed && (Array.isArray(feed.sopra) || Array.isArray(feed.sotto))) {
+      cfg.sopra = feed.sopra || [];
+      cfg.sotto = feed.sotto || [];
+    } else if (feed && Array.isArray(feed.booked)) {
+      cfg.booked = feed.booked;
+    }
     boot(cfg);
   });
 
@@ -68,12 +74,30 @@
 
   var today = new Date(); today.setHours(0, 0, 0, 0);
 
-  var busy = {};
-  (cfg.booked || []).forEach(function (r) {
-    var d = parseD(r.from), end = parseD(r.to);
-    while (d <= end) { busy[ymd(d)] = true; d = new Date(d.getTime() + 86400000); }
-  });
-  var isBusy = function (d) { return !!busy[ymd(d)]; };
+  // Occupancy count per date: 0 = free, 1 = one apartment taken (partial),
+  // 2 = both taken / whole house (full). If the live feed gives per-apartment
+  // ranges (sopra/sotto) we derive the three states; otherwise a flat booked
+  // list (fallback availability.json) is treated as fully occupied.
+  function expandInto(ranges, map) {
+    (ranges || []).forEach(function (r) {
+      var d = parseD(r.from), end = parseD(r.to);
+      while (d <= end) { map[ymd(d)] = true; d = new Date(d.getTime() + 86400000); }
+    });
+  }
+  var occ = {};
+  if (cfg.sopra || cfg.sotto) {
+    var mA = {}, mB = {};
+    expandInto(cfg.sopra, mA);
+    expandInto(cfg.sotto, mB);
+    Object.keys(mA).forEach(function (k) { occ[k] = (occ[k] || 0) + 1; });
+    Object.keys(mB).forEach(function (k) { occ[k] = (occ[k] || 0) + 1; });
+  } else {
+    var mAll = {};
+    expandInto(cfg.booked, mAll);
+    Object.keys(mAll).forEach(function (k) { occ[k] = 2; });
+  }
+  var isFull = function (d) { return (occ[ymd(d)] || 0) >= 2; };
+  var isPartial = function (d) { return (occ[ymd(d)] || 0) === 1; };
   var isPast = function (d) { return d < today; };
 
   /* ---------- GALLERY ---------- */
@@ -170,9 +194,10 @@
       cell.textContent = dnum;
       var ds = ymd(d);
       if (isPast(d)) cell.classList.add("past");
-      else if (isBusy(d)) cell.classList.add("busy");
+      else if (isFull(d)) cell.classList.add("busy");
       else {
         cell.classList.add("free");
+        if (isPartial(d)) cell.classList.add("partial");
         cell.dataset.date = ds;
         if (selStart && ds === selStart) cell.classList.add("sel");
         if (selEnd && ds === selEnd) cell.classList.add("sel");
@@ -186,7 +211,7 @@
 
   function rangeHasBusy(a, b) {
     var d = parseD(a), end = parseD(b);
-    while (d < end) { if (isBusy(d)) return true; d = new Date(d.getTime() + 86400000); }
+    while (d < end) { if (isFull(d)) return true; d = new Date(d.getTime() + 86400000); }
     return false;
   }
 

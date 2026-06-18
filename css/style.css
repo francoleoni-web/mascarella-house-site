@@ -252,3 +252,9 @@ h1,h2,h3{font-family:"Fraunces",Georgia,serif;font-weight:600;line-height:1.15;m
 @media (max-width:860px){.stays{grid-template-columns:1fr;max-width:430px;margin-left:auto;margin-right:auto}}
 [dir="rtl"] .stay__body{text-align:right}
 [dir="rtl"] .stay .btn{align-self:flex-end}
+
+/* ===== Calendario: stato "parziale" (un appartamento ancora libero) ===== */
+.sw--partial{background:linear-gradient(135deg,#fff 0 50%,var(--busy) 50% 100%);border:1px solid var(--line)}
+.cal-day.partial,
+.cal-day.partial:hover{background:linear-gradient(135deg,#fff 0 55%,var(--busy) 55% 100%)}
+.cal-day.partial.sel{background:var(--ochre);color:#fff}
