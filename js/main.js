@@ -41,13 +41,22 @@
   }
   function capOf(i) { var p = t("photos"); return (p && p[i]) || ""; }
 
-  // Caricamento disponibilità dal file gestito dal pannello /admin.
-  fetch("availability.json", { cache: "no-store" })
-    .then(function (r) { return r.ok ? r.json() : null; })
-    .catch(function () { return null; })
-    .then(function (data) {
-      boot(data || { booked: [], contactEmail: "" });
-    });
+  // Disponibilità: i periodi occupati arrivano in diretta dal check-in
+  // (endpoint pubblico, solo date — nessun dato personale), con fallback su
+  // availability.json (che fornisce comunque minNights e contactEmail).
+  var AVAIL_FEED = "https://checkin.mascarella89.com/api/availability";
+  Promise.all([
+    fetch("availability.json", { cache: "no-store" })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .catch(function () { return null; }),
+    fetch(AVAIL_FEED, { cache: "no-store" })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .catch(function () { return null; })
+  ]).then(function (res) {
+    var cfg = res[0] || { booked: [], contactEmail: "" };
+    if (res[1] && Array.isArray(res[1].booked)) cfg.booked = res[1].booked;
+    boot(cfg);
+  });
 
   function boot(cfg) {
   /* ---------- HELPERS ---------- */
