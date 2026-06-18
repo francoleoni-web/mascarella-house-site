@@ -35,8 +35,6 @@ h1,h2,h3{font-family:"Fraunces",Georgia,serif;font-weight:600;line-height:1.15;m
 .btn--ghost:hover{background:rgba(255,255,255,.15)}
 .btn--small{padding:.55rem 1.1rem;font-size:.85rem}
 .btn--block{width:100%}
-.btn--airbnb{background:#ff385c}
-.btn--airbnb:hover{background:#e11d48}
 
 /* Nav */
 .nav{position:sticky;top:0;z-index:50;background:rgba(251,247,239,.9);
