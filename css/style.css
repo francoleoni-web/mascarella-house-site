@@ -238,3 +238,19 @@ h1,h2,h3{font-family:"Fraunces",Georgia,serif;font-weight:600;line-height:1.15;m
 [dir="rtl"] .hero__content,[dir="rtl"] .about__text,[dir="rtl"] .section__title,[dir="rtl"] .section__sub{text-align:right}
 [dir="rtl"] .hero__cta,[dir="rtl"] .hero__meta,[dir="rtl"] .book__contacts{flex-direction:row-reverse}
 [dir="rtl"] .about__list li span{direction:rtl}
+
+/* ===== Tre modi per soggiornare ===== */
+.stays{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:28px}
+.stay{display:flex;flex-direction:column;background:var(--white);border:1px solid var(--line);
+  border-radius:var(--radius);overflow:hidden;transition:transform .2s,box-shadow .2s}
+.stay:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+.stay__media{aspect-ratio:4/3;overflow:hidden;background:var(--cream-2)}
+.stay__media img{width:100%;height:100%;object-fit:cover;display:block}
+.stay__body{display:flex;flex-direction:column;gap:.5rem;padding:18px 20px 20px;flex:1}
+.stay__body h3{font-size:1.15rem}
+.stay__specs{font-size:.95rem;font-weight:500;margin:0;letter-spacing:.02em}
+.stay__desc{font-size:.9rem;color:var(--muted);margin:0;flex:1}
+.stay .btn{align-self:flex-start;margin-top:8px}
+@media (max-width:860px){.stays{grid-template-columns:1fr;max-width:430px;margin-left:auto;margin-right:auto}}
+[dir="rtl"] .stay__body{text-align:right}
+[dir="rtl"] .stay .btn{align-self:flex-end}
