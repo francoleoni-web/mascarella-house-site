@@ -1,0 +1,52 @@
+/* ===== Pagina guida "Bologna in 3 giorni" ===== */
+.guide-hero{position:relative;min-height:46vh;display:flex;align-items:flex-end;color:#fff;
+  background:var(--ink)}
+.guide-hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.guide-hero__ov{position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,15,8,.2),rgba(20,15,8,.8))}
+.guide-hero__in{position:relative;padding:48px 0}
+.guide-hero h1{font-size:clamp(2.4rem,6vw,4rem);font-weight:500}
+.guide-hero p{max-width:46ch;margin:.6rem 0 0;opacity:.95}
+
+.guide{padding:64px 0}
+.day{margin:0 0 56px}
+.day__title{font-size:clamp(1.6rem,3.5vw,2.2rem);padding-bottom:.5rem;border-bottom:2px solid var(--ochre);margin-bottom:8px}
+.grp{margin-top:32px}
+.grp__h{text-transform:uppercase;letter-spacing:.16em;font-size:.78rem;font-weight:700;color:var(--ochre);margin:0 0 14px}
+
+.place{background:#fff;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;
+  box-shadow:0 6px 20px rgba(60,45,20,.06);margin-bottom:18px}
+.place__imgs{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:2px}
+.place__imgs figure{margin:0;aspect-ratio:4/3;overflow:hidden;cursor:zoom-in;background:var(--cream-2)}
+.place__imgs img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
+.place__imgs figure:hover img{transform:scale(1.05)}
+.place__body{padding:20px 22px 22px}
+.place__name{font-size:1.25rem;margin:0 0 .5rem}
+.place__info{display:flex;flex-wrap:wrap;gap:.4rem .9rem;font-size:.85rem;color:var(--muted);margin:0 0 .7rem}
+.place__info span{display:inline-flex;align-items:center;gap:.35rem}
+.place__info a{color:var(--ochre-dark)}
+.place__desc{color:var(--ink);margin:0}
+.place__hours{font-size:.85rem;color:var(--muted);margin:.5rem 0 0}
+.place__best{font-size:.88rem;margin:.5rem 0 0}
+.place__tip{margin:.8rem 0 0;background:var(--cream-2);border-left:3px solid var(--ochre);
+  border-radius:8px;padding:.7rem .9rem;font-size:.9rem}
+.place__alt{display:flex;align-items:center;gap:.8rem;color:var(--muted);font-size:.8rem;
+  text-transform:uppercase;letter-spacing:.12em;margin:0 0 14px}
+.place__alt::before,.place__alt::after{content:"";flex:1;height:1px;background:var(--line)}
+
+.guide-trips{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.usefultips{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:10px}
+.usefultips li{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px 16px;
+  font-size:.95rem;display:flex;gap:.6rem}
+.usefultips li::before{content:"✓";color:var(--ochre);font-weight:700}
+
+.guide-foot{padding:40px 0;text-align:center;color:var(--muted);font-size:.9rem}
+
+@media (max-width:760px){
+  .guide-trips{grid-template-columns:1fr}
+}
+
+/* RTL (arabo) */
+[dir="rtl"] .grp__h{letter-spacing:0}
+[dir="rtl"] .place__tip{border-left:0;border-right:3px solid var(--ochre)}
+[dir="rtl"] .day__title,[dir="rtl"] .place__body,[dir="rtl"] .guide-hero__in{text-align:right}
+[dir="rtl"] .usefultips li{flex-direction:row-reverse}

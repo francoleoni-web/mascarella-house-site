@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bologna in 3 days — Mascarella 89</title>
+  <meta name="description" content="Local tips, food and hidden gems in Bologna — a 3-day guide from your hosts at Mascarella 89." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/guide.css" />
+</head>
+<body>
+  <header class="nav" id="top">
+    <div class="container nav__inner">
+      <a href="index.html" class="brand">Mascarella <span>89</span></a>
+      <select id="langSelect" class="lang-select" aria-label="Language / Lingua"></select>
+      <a href="index.html" class="btn btn--small" data-g="back">Torna al sito</a>
+    </div>
+  </header>
+
+  <section class="guide-hero">
+    <img src="assets/img/guide/g03.jpg" alt="Bologna" loading="eager" />
+    <div class="guide-hero__ov"></div>
+    <div class="container guide-hero__in">
+      <h1 data-g="intro_title">Bologna in 3 giorni</h1>
+      <p data-g="intro_sub">Consigli, cibo e angoli nascosti dai tuoi host.</p>
+    </div>
+  </section>
+
+  <main class="guide">
+    <div class="container" id="guideRoot"></div>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__inner">
+      <div>
+        <span class="brand brand--footer">Mascarella <span>89</span></span>
+        <p>Bologna · Italia</p>
+      </div>
+      <div class="footer__links">
+        <a href="index.html" data-g="back">Torna al sito</a>
+        <a href="#top" aria-label="Top">↑</a>
+      </div>
+    </div>
+  </footer>
+
+  <div class="lightbox" id="lightbox" hidden>
+    <button class="lb-close" id="lbClose" aria-label="Chiudi">×</button>
+    <button class="lb-nav lb-prev" id="lbPrev" aria-label="Prev">‹</button>
+    <img id="lbImg" src="" alt="" />
+    <button class="lb-nav lb-next" id="lbNext" aria-label="Next">›</button>
+  </div>
+
+  <script src="js/i18n.js"></script>
+  <script src="js/guide-i18n.js"></script>
+  <script src="js/guide-data.js"></script>
+  <script src="js/guide.js"></script>
+</body>
+</html>

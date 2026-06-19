@@ -258,3 +258,10 @@ h1,h2,h3{font-family:"Fraunces",Georgia,serif;font-weight:600;line-height:1.15;m
 .cal-day.partial,
 .cal-day.partial:hover{background:linear-gradient(135deg,#fff 0 55%,var(--busy) 55% 100%)}
 .cal-day.partial.sel{background:var(--ochre);color:#fff}
+
+/* ===== Teaser guida (homepage) ===== */
+.guide-teaser{position:relative;color:#fff;text-align:center}
+.guide-teaser img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.guide-teaser__ov{position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,15,8,.45),rgba(20,15,8,.7))}
+.guide-teaser__in{position:relative;padding:84px 24px;display:flex;flex-direction:column;align-items:center;gap:1.1rem}
+.guide-teaser__in p{color:rgba(255,255,255,.92);max-width:52ch;margin:0}
