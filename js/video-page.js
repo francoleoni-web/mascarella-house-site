@@ -91,11 +91,41 @@
   };
 
   var UI = {
-    it: { pick: "Scegli la tua lingua", fallback: "Se il video non parte,", open: "aprilo qui", close: "Chiudi" },
-    en: { pick: "Choose your language", fallback: "If the video does not start,", open: "open it here", close: "Close" },
-    es: { pick: "Elige tu idioma", fallback: "Si el vídeo no se reproduce,", open: "ábrelo aquí", close: "Cerrar" },
-    fr: { pick: "Choisissez votre langue", fallback: "Si la vidéo ne démarre pas,", open: "ouvrez-la ici", close: "Fermer" },
-    zh: { pick: "选择您的语言", fallback: "如果视频无法播放，", open: "点此打开", close: "关闭" },
+    it: {
+      pick: "Scegli la tua lingua",
+      fallback: "Se il video non parte,", open: "aprilo qui", close: "Chiudi",
+      guide_title: "Bologna in 3 giorni",
+      guide_sub: "Consigli, sapori e tesori nascosti dai tuoi host del posto.",
+      guide_meta: "PDF · circa 3 MB",
+    },
+    en: {
+      pick: "Choose your language",
+      fallback: "If the video does not start,", open: "open it here", close: "Close",
+      guide_title: "Bologna in 3 days",
+      guide_sub: "Tips, food and hidden treasures from your local hosts.",
+      guide_meta: "PDF · about 3 MB",
+    },
+    es: {
+      pick: "Elige tu idioma",
+      fallback: "Si el vídeo no se reproduce,", open: "ábrelo aquí", close: "Cerrar",
+      guide_title: "Bolonia en 3 días",
+      guide_sub: "Consejos, sabores y tesoros escondidos de tus anfitriones locales.",
+      guide_meta: "PDF · unos 3 MB",
+    },
+    fr: {
+      pick: "Choisissez votre langue",
+      fallback: "Si la vidéo ne démarre pas,", open: "ouvrez-la ici", close: "Fermer",
+      guide_title: "Bologne en 3 jours",
+      guide_sub: "Conseils, saveurs et trésors cachés de vos hôtes sur place.",
+      guide_meta: "PDF · environ 3 Mo",
+    },
+    zh: {
+      pick: "选择您的语言",
+      fallback: "如果视频无法播放，", open: "点此打开", close: "关闭",
+      guide_title: "博洛尼亚三日游",
+      guide_sub: "来自本地房东的建议、美食与隐藏的宝藏。",
+      guide_meta: "PDF · 约 3 MB",
+    },
   };
 
   var root = document.querySelector("[data-topic]");
@@ -128,6 +158,19 @@
     if (openEl) openEl.textContent = ui.open;
     var closeEl = document.getElementById("vclose");
     if (closeEl) closeEl.setAttribute("aria-label", ui.close);
+
+    // Bologna guide card — present on the apartment pages only.
+    ["guide_title", "guide_sub", "guide_meta"].forEach(function (k) {
+      var el = document.querySelector("[data-vt='" + k + "']");
+      if (el && ui[k]) el.textContent = ui[k];
+    });
+    // Point the guest at their own PDF without hiding the other four.
+    Array.prototype.forEach.call(
+      document.querySelectorAll("[data-glang]"),
+      function (a) {
+        a.classList.toggle("is-on", a.getAttribute("data-glang") === lang);
+      }
+    );
 
     // The page keeps its Italian lang attribute only until we know better;
     // screen readers need the right one to pronounce the heading.

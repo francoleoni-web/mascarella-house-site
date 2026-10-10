@@ -109,6 +109,50 @@
 
 .vback{ text-align:center; padding:0 0 48px; }
 
+/* ---- Bologna guide (PDF, five languages) -------------------------------
+   Sits under the video list. One card rather than five, with the languages
+   as a row of links: the guide is the same document in every language, so
+   repeating the whole card five times would only pad the page. */
+.vguide{ padding:8px 0 56px; }
+.vguide__card{
+  max-width:720px; margin:0 auto;
+  background:var(--white); border:1px solid var(--line);
+  border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow);
+}
+.vguide__media{ position:relative; aspect-ratio:16/7; background:#2a241c; }
+.vguide__media img{ width:100%; height:100%; object-fit:cover; }
+.vguide__media::after{
+  content:""; position:absolute; inset:0;
+  background:linear-gradient(to top, rgba(28,22,14,.78), rgba(28,22,14,.05) 65%);
+}
+.vguide__titles{
+  position:absolute; left:0; right:0; bottom:0; padding:18px 20px; z-index:1;
+}
+.vguide__titles h2{
+  color:#fff; font-size:clamp(1.3rem, 3.6vw, 1.7rem); margin:0 0 4px;
+}
+.vguide__titles p{ color:#f0e6d4; font-size:.92rem; margin:0; }
+
+.vguide__body{ padding:18px 20px 20px; }
+.vguide__meta{
+  font-size:.8rem; font-weight:600; color:var(--ochre-dark);
+  text-transform:uppercase; letter-spacing:.08em; margin:0 0 12px;
+}
+.vguide__links{ display:flex; flex-wrap:wrap; gap:8px; }
+.vguide__links a{
+  display:inline-flex; align-items:center; gap:.45rem;
+  font-size:.92rem; font-weight:500;
+  padding:.5rem 1rem; border-radius:999px;
+  border:1.5px solid var(--line); background:var(--cream);
+  transition:border-color .15s ease, background .15s ease, color .15s ease;
+}
+.vguide__links a:hover{ border-color:var(--ochre); background:var(--white); }
+/* Mirrors the hero picker: the guest's language is the obvious one to take. */
+.vguide__links a.is-on{
+  background:var(--ochre); border-color:var(--ochre); color:#fff;
+}
+.vguide__links svg{ width:15px; height:15px; flex:0 0 15px; }
+
 @media (min-width:640px){
   .vcard__thumb{ flex-basis:132px; width:132px; }
   .vcard__lang{ font-size:1.35rem; }
