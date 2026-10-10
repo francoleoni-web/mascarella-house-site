@@ -1,9 +1,164 @@
-/* Player for the instruction-video pages.
-   Cards are plain <button>s carrying data-src/data-label; clicking one
-   loads it into a single shared <video> inside the overlay. Keeping one
-   video element means only the clip the guest asked for is ever fetched. */
+/* Instruction-video pages: hero translation + player.
+
+   The five video cards are each labelled in their own language, but the
+   heading above them was Italian only, so a guest who reads none of it
+   landed on a wall of text they could not place. The hero now follows a
+   language picker, pre-selected from the browser's own language.
+
+   The markup ships the Italian copy, so the page still reads correctly if
+   this script never runs. */
 (function () {
   "use strict";
+
+  var STORE = "m89_lang"; // shared with the main site's language selector
+
+  var LANGS = ["it", "en", "es", "fr", "zh"];
+  var LABELS = {
+    it: "Italiano",
+    en: "English",
+    es: "Español",
+    fr: "Français",
+    zh: "中文",
+  };
+
+  var T = {
+    keybox: {
+      it: {
+        title: "Come prendere le chiavi",
+        sub: "Il video mostra dove si trova la cassetta delle chiavi all'ingresso, come inserire il codice e come riporre le chiavi alla partenza.",
+      },
+      en: {
+        title: "How to collect the keys",
+        sub: "The video shows where the key box is at the entrance, how to enter the code, and where to put the keys back when you leave.",
+      },
+      es: {
+        title: "Cómo recoger las llaves",
+        sub: "El vídeo muestra dónde está la caja de llaves en la entrada, cómo introducir el código y dónde dejar las llaves al marcharte.",
+      },
+      fr: {
+        title: "Comment récupérer les clés",
+        sub: "La vidéo montre où se trouve la boîte à clés à l'entrée, comment saisir le code et où ranger les clés au moment du départ.",
+      },
+      zh: {
+        title: "如何取钥匙",
+        sub: "视频介绍钥匙盒在入口的位置、如何输入密码，以及离开时如何把钥匙放回原处。",
+      },
+    },
+    apt1: {
+      it: {
+        title: "Appartamento 1 — come arrivare",
+        sub: "Il video mostra il percorso dal portone di strada fino alla porta dell'appartamento 1, piano per piano.",
+      },
+      en: {
+        title: "Apartment 1 — how to get there",
+        sub: "The video shows the way from the street door up to the door of apartment 1, floor by floor.",
+      },
+      es: {
+        title: "Apartamento 1 — cómo llegar",
+        sub: "El vídeo muestra el recorrido desde el portal de la calle hasta la puerta del apartamento 1, piso a piso.",
+      },
+      fr: {
+        title: "Appartement 1 — comment y accéder",
+        sub: "La vidéo montre le trajet depuis la porte de la rue jusqu'à la porte de l'appartement 1, étage par étage.",
+      },
+      zh: {
+        title: "1 号公寓 — 如何前往",
+        sub: "视频展示从临街大门到 1 号公寓门口的路线，逐层指引。",
+      },
+    },
+    apt2: {
+      it: {
+        title: "Appartamento 2 — come arrivare",
+        sub: "Il video mostra il percorso dal portone di strada fino alla porta dell'appartamento 2, piano per piano.",
+      },
+      en: {
+        title: "Apartment 2 — how to get there",
+        sub: "The video shows the way from the street door up to the door of apartment 2, floor by floor.",
+      },
+      es: {
+        title: "Apartamento 2 — cómo llegar",
+        sub: "El vídeo muestra el recorrido desde el portal de la calle hasta la puerta del apartamento 2, piso a piso.",
+      },
+      fr: {
+        title: "Appartement 2 — comment y accéder",
+        sub: "La vidéo montre le trajet depuis la porte de la rue jusqu'à la porte de l'appartement 2, étage par étage.",
+      },
+      zh: {
+        title: "2 号公寓 — 如何前往",
+        sub: "视频展示从临街大门到 2 号公寓门口的路线，逐层指引。",
+      },
+    },
+  };
+
+  var UI = {
+    it: { pick: "Scegli la tua lingua", fallback: "Se il video non parte,", open: "aprilo qui", close: "Chiudi" },
+    en: { pick: "Choose your language", fallback: "If the video does not start,", open: "open it here", close: "Close" },
+    es: { pick: "Elige tu idioma", fallback: "Si el vídeo no se reproduce,", open: "ábrelo aquí", close: "Cerrar" },
+    fr: { pick: "Choisissez votre langue", fallback: "Si la vidéo ne démarre pas,", open: "ouvrez-la ici", close: "Fermer" },
+    zh: { pick: "选择您的语言", fallback: "如果视频无法播放，", open: "点此打开", close: "关闭" },
+  };
+
+  var root = document.querySelector("[data-topic]");
+  var topic = root ? root.getAttribute("data-topic") : null;
+  var dict = topic && T[topic];
+
+  // ---- language -----------------------------------------------------------
+
+  function initialLang() {
+    var saved = null;
+    try { saved = localStorage.getItem(STORE); } catch (e) {}
+    if (saved && dict && dict[saved]) return saved;
+    var nav = (navigator.language || "it").slice(0, 2).toLowerCase();
+    return dict && dict[nav] ? nav : "it";
+  }
+
+  function apply(lang) {
+    if (!dict || !dict[lang]) return;
+    var titleEl = document.querySelector("[data-vt='title']");
+    var subEl = document.querySelector("[data-vt='sub']");
+    if (titleEl) titleEl.textContent = dict[lang].title;
+    if (subEl) subEl.textContent = dict[lang].sub;
+
+    var ui = UI[lang] || UI.it;
+    var pickEl = document.querySelector("[data-vt='pick']");
+    if (pickEl) pickEl.textContent = ui.pick;
+    var fbEl = document.querySelector("[data-vt='fallback']");
+    if (fbEl) fbEl.textContent = ui.fallback + " ";
+    var openEl = document.getElementById("vfallback");
+    if (openEl) openEl.textContent = ui.open;
+    var closeEl = document.getElementById("vclose");
+    if (closeEl) closeEl.setAttribute("aria-label", ui.close);
+
+    // The page keeps its Italian lang attribute only until we know better;
+    // screen readers need the right one to pronounce the heading.
+    document.documentElement.setAttribute("lang", lang);
+
+    Array.prototype.forEach.call(
+      document.querySelectorAll("[data-lang]"),
+      function (b) {
+        var on = b.getAttribute("data-lang") === lang;
+        b.classList.toggle("is-on", on);
+        b.setAttribute("aria-pressed", on ? "true" : "false");
+      }
+    );
+    try { localStorage.setItem(STORE, lang); } catch (e) {}
+  }
+
+  var picker = document.getElementById("vlangs");
+  if (picker && dict) {
+    LANGS.forEach(function (code) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "vlang";
+      b.setAttribute("data-lang", code);
+      b.textContent = LABELS[code];
+      b.addEventListener("click", function () { apply(code); });
+      picker.appendChild(b);
+    });
+    apply(initialLang());
+  }
+
+  // ---- player -------------------------------------------------------------
 
   var modal = document.getElementById("vmodal");
   var video = document.getElementById("vplayer");

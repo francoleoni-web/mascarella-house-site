@@ -17,14 +17,28 @@
 .vhero__sub{
   margin:0 auto; max-width:620px; color:var(--muted); font-size:1rem;
 }
-/* The "choose your language" line, repeated in all five languages so every
-   guest recognises at least one of them. */
-.vhero__langs{
-  margin:18px auto 0; max-width:720px;
-  display:flex; flex-wrap:wrap; gap:6px 14px; justify-content:center;
-  font-size:.86rem; color:var(--muted);
+/* Language picker. The prompt above it is translated too, but the buttons
+   always read in their own language, so a guest who understands none of the
+   surrounding copy can still find the one word they recognise. */
+.vhero__pick{
+  margin:20px 0 8px; font-size:.86rem; color:var(--muted);
 }
-.vhero__langs span{ white-space:nowrap; }
+.vhero__langs{
+  margin:0 auto; max-width:720px;
+  display:flex; flex-wrap:wrap; gap:8px; justify-content:center;
+}
+.vlang{
+  font:inherit; font-size:.9rem; font-weight:500;
+  padding:.4rem 1rem; border-radius:999px; cursor:pointer;
+  background:var(--white); color:var(--ink);
+  border:1.5px solid var(--line);
+  transition:background .15s ease, border-color .15s ease, color .15s ease;
+}
+.vlang:hover{ border-color:var(--ochre); }
+.vlang:focus-visible{ outline:3px solid var(--ochre); outline-offset:2px; }
+.vlang.is-on{
+  background:var(--ochre); border-color:var(--ochre); color:#fff;
+}
 
 .vlist{ padding:36px 0 56px; }
 .vlist__grid{

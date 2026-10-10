@@ -20,21 +20,16 @@
     </div>
   </header>
 
-  <section class="vhero">
+  <section class="vhero" data-topic="keybox">
     <div class="container">
       <p class="vhero__eyebrow">Via Mascarella 89 · Bologna</p>
-      <h1>Come prendere le chiavi</h1>
-      <p class="vhero__sub">
+      <h1 data-vt="title">Come prendere le chiavi</h1>
+      <p class="vhero__sub" data-vt="sub">
         Il video mostra dove si trova la cassetta delle chiavi all'ingresso,
         come inserire il codice e come riporre le chiavi alla partenza.
       </p>
-      <div class="vhero__langs">
-        <span>Scegli la tua lingua</span>
-        <span>· Choose your language</span>
-        <span>· Elige tu idioma</span>
-        <span>· Choisissez votre langue</span>
-        <span>· 选择您的语言</span>
-      </div>
+      <p class="vhero__pick" data-vt="pick">Scegli la tua lingua</p>
+      <div class="vhero__langs" id="vlangs"></div>
     </div>
   </section>
 
@@ -111,7 +106,7 @@
       <button class="vmodal__close" id="vclose" aria-label="Chiudi / Close">×</button>
       <video id="vplayer" controls playsinline preload="metadata"></video>
       <p class="vmodal__fallback">
-        Se il video non parte, <a id="vfallback" href="#" target="_blank" rel="noopener">aprilo qui</a>.
+        <span data-vt="fallback">Se il video non parte, </span><a id="vfallback" href="#" target="_blank" rel="noopener">aprilo qui</a>
       </p>
     </div>
   </div>
