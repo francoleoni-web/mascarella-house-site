@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Appartamento 1 — Mascarella 89</title>
+  <meta name="description" content="Video istruzioni: come raggiungere l'appartamento 1 in via Mascarella 89, dal portone all'ingresso." />
+  <!-- Unlisted page: sent directly to guests, kept out of search results. -->
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/video.css" />
+</head>
+<body>
+  <header class="nav" id="top">
+    <div class="container nav__inner">
+      <a href="index.html" class="brand">Mascarella <span>89</span></a>
+    </div>
+  </header>
+
+  <section class="vhero">
+    <div class="container">
+      <p class="vhero__eyebrow">Via Mascarella 89 · Bologna</p>
+      <h1>Appartamento 1 — come arrivare</h1>
+      <p class="vhero__sub">
+        Il video mostra il percorso dal portone di strada fino alla porta
+        dell'appartamento 1, piano per piano.
+      </p>
+      <div class="vhero__langs">
+        <span>Scegli la tua lingua</span>
+        <span>· Choose your language</span>
+        <span>· Elige tu idioma</span>
+        <span>· Choisissez votre langue</span>
+        <span>· 选择您的语言</span>
+      </div>
+    </div>
+  </section>
+
+  <main class="vlist">
+    <div class="container">
+      <div class="vlist__grid">
+
+        <button class="vcard" type="button" data-video="assets/video/apt1-it.mp4" data-label="Italiano">
+          <span class="vcard__thumb"><img src="assets/img/video/apt1-it.jpg" alt="" loading="lazy" /></span>
+          <span class="vcard__body">
+            <span class="vcard__lang">Italiano</span>
+            <span class="vcard__desc">Come arrivare all'appartamento 1</span>
+            <span class="vcard__meta">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+              Guarda il video · 1:59
+            </span>
+          </span>
+        </button>
+
+        <button class="vcard" type="button" data-video="assets/video/apt1-en.mp4" data-label="English">
+          <span class="vcard__thumb"><img src="assets/img/video/apt1-en.jpg" alt="" loading="lazy" /></span>
+          <span class="vcard__body">
+            <span class="vcard__lang">English</span>
+            <span class="vcard__desc">How to reach apartment 1</span>
+            <span class="vcard__meta">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+              Watch the video · 2:41
+            </span>
+          </span>
+        </button>
+
+        <button class="vcard" type="button" data-video="assets/video/apt1-es.mp4" data-label="Español">
+          <span class="vcard__thumb"><img src="assets/img/video/apt1-es.jpg" alt="" loading="lazy" /></span>
+          <span class="vcard__body">
+            <span class="vcard__lang">Español</span>
+            <span class="vcard__desc">Cómo llegar al apartamento 1</span>
+            <span class="vcard__meta">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+              Ver el vídeo · 2:41
+            </span>
+          </span>
+        </button>
+
+        <button class="vcard" type="button" data-video="assets/video/apt1-fr.mp4" data-label="Français">
+          <span class="vcard__thumb"><img src="assets/img/video/apt1-fr.jpg" alt="" loading="lazy" /></span>
+          <span class="vcard__body">
+            <span class="vcard__lang">Français</span>
+            <span class="vcard__desc">Comment accéder à l'appartement 1</span>
+            <span class="vcard__meta">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+              Voir la vidéo · 2:41
+            </span>
+          </span>
+        </button>
+
+        <button class="vcard" type="button" data-video="assets/video/apt1-zh.mp4" data-label="中文">
+          <span class="vcard__thumb"><img src="assets/img/video/apt1-zh.jpg" alt="" loading="lazy" /></span>
+          <span class="vcard__body">
+            <span class="vcard__lang">中文</span>
+            <span class="vcard__desc">如何前往 1 号公寓</span>
+            <span class="vcard__meta">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+              观看视频 · 2:41
+            </span>
+          </span>
+        </button>
+
+      </div>
+    </div>
+  </main>
+
+  <div class="vmodal" id="vmodal" hidden>
+    <div class="vmodal__inner">
+      <button class="vmodal__close" id="vclose" aria-label="Chiudi / Close">×</button>
+      <video id="vplayer" controls playsinline preload="metadata"></video>
+      <p class="vmodal__fallback">
+        Se il video non parte, <a id="vfallback" href="#" target="_blank" rel="noopener">aprilo qui</a>.
+      </p>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container footer__inner">
+      <div>
+        <span class="brand brand--footer">Mascarella <span>89</span></span>
+        <p>Bologna · Italia</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/video-page.js"></script>
+</body>
+</html>
