@@ -113,14 +113,29 @@ h1,h2,h3{font-family:"Fraunces",Georgia,serif;font-weight:600;line-height:1.15;m
 .cal-grid h4{display:none}
 .cal-week,.cal-days{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
 .cal-week span{text-align:center;font-size:.72rem;color:var(--muted);font-weight:600;padding:6px 0}
-.cal-day{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:.9rem;
+.cal-day{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  font-size:.9rem;line-height:1.1;
   border-radius:9px;cursor:pointer;border:1px solid transparent;transition:background .15s}
+/* The nightly price sits under the day number: quiet enough not to fight
+   the date, present enough to be read while scanning the month. */
+.cal-price{font-size:.62rem;color:var(--muted);font-weight:600;margin-top:2px}
+.cal-day.sel .cal-price,.cal-day.inrange .cal-price{color:inherit;opacity:.85}
 .cal-day.empty{cursor:default}
 .cal-day.free:hover{background:var(--cream-2)}
 .cal-day.busy{color:#a59c8c;background:var(--busy);cursor:not-allowed;text-decoration:line-through}
 .cal-day.past{color:#c8c0b2;cursor:not-allowed}
 .cal-day.sel{background:var(--ochre);color:#fff;font-weight:600}
 .cal-day.inrange{background:rgba(217,149,42,.18)}
+.cal-quote{margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
+.cal-quote__title{font-size:.82rem;color:var(--muted);font-weight:600;margin:0 0 8px}
+.cal-quote__bad{font-size:.82rem;color:#b4452f;margin:0 0 8px}
+.cal-quote__none{font-size:.88rem;color:var(--muted);margin:0}
+.cal-quote__row{display:grid;grid-template-columns:1fr auto;gap:2px 12px;align-items:baseline;
+  padding:8px 0;border-bottom:1px solid var(--line)}
+.cal-quote__row:last-child{border-bottom:0}
+.cal-quote__unit{font-weight:600;font-size:.92rem}
+.cal-quote__tot{font-weight:700;font-size:1.05rem;white-space:nowrap}
+.cal-quote__det{grid-column:1/-1;font-size:.74rem;color:var(--muted)}
 .calendar__footer{display:flex;flex-wrap:wrap;gap:1rem;justify-content:space-between;align-items:center;
   margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}
 .cal-legend{display:flex;gap:1.2rem;font-size:.82rem;color:var(--muted)}

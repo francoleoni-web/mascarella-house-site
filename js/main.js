@@ -44,17 +44,26 @@
   // Disponibilità: i periodi occupati arrivano in diretta dal check-in
   // (endpoint pubblico, solo date — nessun dato personale), con fallback su
   // availability.json (che fornisce comunque minNights e contactEmail).
-  var AVAIL_FEED = "https://checkin.mascarella89.com/api/availability";
+  var API = "https://checkin.mascarella89.com";
+  var AVAIL_FEED = API + "/api/availability";
+  // Prices come from the same place, fed nightly by Airbnb's own calendar.
+  // If this call fails the calendar still works: it simply shows no prices,
+  // which is the right way to fail — a missing price is noticed, a wrong
+  // one is not.
   Promise.all([
     fetch("availability.json", { cache: "no-store" })
       .then(function (r) { return r.ok ? r.json() : null; })
       .catch(function () { return null; }),
     fetch(AVAIL_FEED, { cache: "no-store" })
       .then(function (r) { return r.ok ? r.json() : null; })
+      .catch(function () { return null; }),
+    fetch(API + "/api/prices?months=12", { cache: "no-store" })
+      .then(function (r) { return r.ok ? r.json() : null; })
       .catch(function () { return null; })
   ]).then(function (res) {
     var cfg = res[0] || { booked: [], contactEmail: "" };
     var feed = res[1];
+    cfg.prices = res[2];
     if (feed && (Array.isArray(feed.sopra) || Array.isArray(feed.sotto))) {
       cfg.sopra = feed.sopra || [];
       cfg.sotto = feed.sotto || [];
@@ -96,6 +105,23 @@
     expandInto(cfg.booked, mAll);
     Object.keys(mAll).forEach(function (k) { occ[k] = 2; });
   }
+  // The cheapest unit that is free on a given night, used for the little
+  // "from EUR x" under each day. Nothing is computed here beyond the
+  // minimum: the real totals are worked out by the server, so the formula
+  // lives in one place only.
+  var UNIT_KEYS = ["TUTTO", "SOTTO", "SOPRA"];
+  var dayPrice = {};
+  if (cfg.prices && cfg.prices.units) {
+    UNIT_KEYS.forEach(function (u) {
+      var info = cfg.prices.units[u];
+      if (!info || !info.days) return;
+      info.days.forEach(function (d) {
+        if (!d.available || d.price == null) return;
+        if (dayPrice[d.day] == null || d.price < dayPrice[d.day]) dayPrice[d.day] = d.price;
+      });
+    });
+  }
+
   var isFull = function (d) { return (occ[ymd(d)] || 0) >= 2; };
   var isPartial = function (d) { return (occ[ymd(d)] || 0) === 1; };
   var isPast = function (d) { return d < today; };
@@ -199,6 +225,12 @@
         cell.classList.add("free");
         if (isPartial(d)) cell.classList.add("partial");
         cell.dataset.date = ds;
+        if (dayPrice[ds] != null) {
+          var tag = document.createElement("span");
+          tag.className = "cal-price";
+          tag.textContent = "€" + Math.round(dayPrice[ds]);
+          cell.appendChild(tag);
+        }
         if (selStart && ds === selStart) cell.classList.add("sel");
         if (selEnd && ds === selEnd) cell.classList.add("sel");
         if (selStart && selEnd && ds > selStart && ds < selEnd) cell.classList.add("inrange");
@@ -248,6 +280,95 @@
     }
   }
 
+  /* ---------- PREVENTIVO ---------- */
+  // The totals are asked of the server, never recomputed here. Airbnb's
+  // rules have corners — the long-stay discount skips the cleaning fee,
+  // the tourist tax stops after five nights and is capped per person —
+  // and a second copy of that arithmetic in the browser would drift from
+  // the first the day one of them changed.
+  var UNIT_LABEL = { TUTTO: "stays_whole_t", SOTTO: "stays_first_t", SOPRA: "stays_second_t" };
+  var quoteSeq = 0;
+
+  function money(n) {
+    return "€" + n.toFixed(2).replace(".", ",");
+  }
+
+  function renderQuotes(results, coupon) {
+    var box = $("#calQuote");
+    if (!box) return;
+    var bookable = results.filter(function (r) { return r && r.ok; });
+    var html = "";
+    if (coupon && coupon.entered && !coupon.valid) {
+      html += '<p class="cal-quote__bad">' + t("price_coupon_bad") + "</p>";
+    }
+    if (!bookable.length) {
+      html += '<p class="cal-quote__none">' + t("price_none") + " " + t("price_ask") + "</p>";
+      box.innerHTML = html;
+      box.hidden = false;
+      return;
+    }
+    html += '<p class="cal-quote__title">' + t("price_title") + "</p>";
+    bookable
+      .sort(function (a, b) { return a.quote.total - b.quote.total; })
+      .forEach(function (r) {
+        var q = r.quote;
+        var nightsLabel = q.nights === 1
+          ? t("price_night1")
+          : t("price_nights").replace("{n}", q.nights);
+        var lines = [nightsLabel + " " + money(q.nightsTotal)];
+        if (q.extraGuestTotal > 0) lines.push("+ " + money(q.extraGuestTotal));
+        if (q.discount > 0) lines.push(t("price_discount") + " −" + money(q.discount));
+        if (q.couponDiscount > 0) lines.push(q.couponCode + " −" + money(q.couponDiscount));
+        lines.push(t("price_cleaning") + " " + money(q.cleaningFee));
+        lines.push(t("price_tax") + " " + money(q.tax));
+        html +=
+          '<div class="cal-quote__row"><span class="cal-quote__unit">' +
+          t(UNIT_LABEL[r.unit]) +
+          '</span><span class="cal-quote__tot">' + money(q.total) + "</span>" +
+          '<span class="cal-quote__det">' + lines.join(" · ") + "</span></div>";
+      });
+    box.innerHTML = html;
+    box.hidden = false;
+  }
+
+  function refreshQuote() {
+    var box = $("#calQuote");
+    if (!box) return;
+    if (!selStart || !selEnd) { box.hidden = true; box.innerHTML = ""; return; }
+    var guests = ($("#fGuests") && $("#fGuests").value) || "2";
+    var coupon = ($("#fCoupon") && $("#fCoupon").value.trim()) || "";
+    var seq = ++quoteSeq;
+    box.hidden = false;
+    box.innerHTML = '<p class="cal-quote__title">' + t("price_loading") + "</p>";
+    Promise.all(UNIT_KEYS.map(function (u) {
+      var url = API + "/api/quote?unit=" + u + "&from=" + selStart + "&to=" + selEnd +
+        "&guests=" + encodeURIComponent(guests) +
+        (coupon ? "&coupon=" + encodeURIComponent(coupon) : "");
+      return fetch(url, { cache: "no-store" })
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .catch(function () { return null; });
+    })).then(function (results) {
+      // A slower answer to an older selection must not overwrite a newer
+      // one: the guest clicks faster than the network replies.
+      if (seq !== quoteSeq) return;
+      var withUnit = results.map(function (r, i) {
+        return r ? Object.assign({ unit: UNIT_KEYS[i] }, r) : null;
+      });
+      var cp = null;
+      withUnit.forEach(function (r) { if (r && r.coupon) cp = r.coupon; });
+      renderQuotes(withUnit, cp);
+    });
+  }
+
+  if ($("#fGuests")) $("#fGuests").addEventListener("change", refreshQuote);
+  if ($("#fCoupon")) {
+    var couponTimer = null;
+    $("#fCoupon").addEventListener("input", function () {
+      clearTimeout(couponTimer);
+      couponTimer = setTimeout(refreshQuote, 600);
+    });
+  }
+
   if ($("#calGrids")) {
     $("#calGrids").addEventListener("click", function (e) {
       var cell = e.target.closest(".cal-day.free");
@@ -260,6 +381,7 @@
       if (selStart) { var i = $("#fIn"); if (i) i.value = selStart; }
       if (selEnd) { var o = $("#fOut"); if (o) o.value = selEnd; }
       render();
+      refreshQuote();
     });
     $("#calPrev").addEventListener("click", function () {
       var m = new Date(view.getFullYear(), view.getMonth() - 1, 1);
