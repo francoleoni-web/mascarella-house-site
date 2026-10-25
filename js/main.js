@@ -474,11 +474,9 @@
     }
 
     var sub = $("#revSub");
-    if (sub) {
-      sub.textContent =
-        (data.average ? data.average.toFixed(2).replace(".", ",") + " ★ · " : "") +
-        all.length + " " + t("rev_sub");
-    }
+    // Solo "Recensioni su Airbnb": il voto sta gia' grande in cima alla
+    // pagina, e ripeterlo qui non aggiunge niente.
+    if (sub) sub.textContent = t("rev_sub");
 
     function stars(n) {
       if (!n) return "";
