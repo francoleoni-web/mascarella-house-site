@@ -591,11 +591,36 @@
   window.__reloadReviews = loadReviews;
   loadReviews();
 
-  /* ---------- FORM (mailto) ---------- */
+  /* ---------- FORM ---------- */
+  // La richiesta va al sistema di check-in, dove resta in una lista con
+  // il preventivo gia' calcolato. L'email parte lo stesso: e' la rete di
+  // sicurezza se l'endpoint non risponde, e finche' non si e' sicuri
+  // che la richiesta sia arrivata e' meglio averla due volte che zero.
+  function inviaRichiesta(f) {
+    return fetch(API + "/api/richieste", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: f.name.value,
+        email: f.email.value,
+        from: f.checkin.value || null,
+        to: f.checkout.value || null,
+        guests: Number(f.guests.value) || null,
+        coupon: f.coupon ? f.coupon.value : null,
+        note: f.message.value || null,
+        lang: LANG,
+        website: f.website ? f.website.value : "",
+      }),
+    })
+      .then(function (r) { return r.ok; })
+      .catch(function () { return false; });
+  }
+
   var form = $("#bookForm");
   if (form) form.addEventListener("submit", function (e) {
     e.preventDefault();
     var f = e.target;
+    inviaRichiesta(f);
     var body =
       t("form_name") + ": " + f.name.value + "\n" +
       t("form_email") + ": " + f.email.value + "\n" +

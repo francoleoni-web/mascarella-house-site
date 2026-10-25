@@ -310,3 +310,7 @@ h1,h2,h3{font-family:"Fraunces",Georgia,serif;font-weight:600;line-height:1.15;m
 .hero__rating-num{font-weight:800;font-size:1.9rem;line-height:1;white-space:nowrap;letter-spacing:-.01em}
 .hero__rating-sub{font-size:.95rem;color:var(--muted);font-weight:600}
 @media (max-width:640px){.hero__rating-num{font-size:1.6rem}}
+
+/* Campo trappola: fuori dallo schermo, non "display:none" — alcuni robot
+   saltano apposta i campi nascosti in quel modo. */
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
