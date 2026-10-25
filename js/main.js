@@ -272,11 +272,76 @@
     return "€" + n.toFixed(2).replace(".", ",");
   }
 
+  // The quote box is self-contained: dates from the calendar, guests and
+  // an optional code right here, one button. Asking for a price should
+  // not mean filling in a name and an email first — those come later,
+  // when the visitor has seen the number and wants to go ahead.
+  var quoteGuests = 2;
+  var quoteCoupon = "";
+  var couponOpen = false;
+
+  function money(n) {
+    return "€" + n.toFixed(2).replace(".", ",");
+  }
+
+  function maxGuestsOverall() { return 5; }
+
+  function controlsHtml(busy) {
+    var opts = "";
+    for (var g = 1; g <= maxGuestsOverall(); g++) {
+      opts += '<option value="' + g + '"' + (g === quoteGuests ? " selected" : "") + ">" + g + "</option>";
+    }
+    var html =
+      '<div class="cal-quote__ask">' +
+      '<label class="cal-quote__lbl" for="qGuests">' + t("form_guests") + "</label>" +
+      '<select id="qGuests" class="cal-quote__sel">' + opts + "</select>" +
+      '<button type="button" id="qGo" class="btn btn--sm"' + (busy ? " disabled" : "") + ">" +
+      (busy ? t("price_loading") : t("price_show")) + "</button>" +
+      "</div>";
+    if (couponOpen) {
+      html +=
+        '<div class="cal-quote__ask"><input id="qCoupon" class="cal-quote__code" type="text" ' +
+        'autocomplete="off" value="' + quoteCoupon.replace(/"/g, "&quot;") + '" placeholder="' +
+        t("form_coupon") + '" /></div>';
+    } else {
+      html += '<button type="button" id="qCouponOpen" class="cal-quote__link">' +
+        t("price_have_coupon") + "</button>";
+    }
+    return html;
+  }
+
+  function wireControls() {
+    var sel = $("#qGuests");
+    if (sel) sel.addEventListener("change", function () {
+      quoteGuests = Number(sel.value) || 2;
+      var f = $("#fGuests"); if (f) f.value = String(quoteGuests);
+    });
+    var go = $("#qGo");
+    if (go) go.addEventListener("click", askQuote);
+    var open = $("#qCouponOpen");
+    if (open) open.addEventListener("click", function () {
+      couponOpen = true; showPrompt();
+      var c = $("#qCoupon"); if (c) c.focus();
+    });
+    var code = $("#qCoupon");
+    if (code) code.addEventListener("input", function () { quoteCoupon = code.value.trim(); });
+  }
+
+  /** Before anything is asked: the controls alone, no price. */
+  function showPrompt(busy) {
+    var box = $("#calQuote");
+    if (!box) return;
+    if (!selStart || !selEnd) { box.hidden = true; box.innerHTML = ""; return; }
+    box.innerHTML = controlsHtml(Boolean(busy));
+    box.hidden = false;
+    wireControls();
+  }
+
   function renderQuotes(results, coupon) {
     var box = $("#calQuote");
     if (!box) return;
     var bookable = results.filter(function (r) { return r && r.ok; });
-    var html = "";
+    var html = controlsHtml(false);
     if (coupon && coupon.entered && !coupon.valid) {
       html += '<p class="cal-quote__bad">' + t("price_coupon_bad") + "</p>";
     }
@@ -284,6 +349,7 @@
       html += '<p class="cal-quote__none">' + t("price_none") + " " + t("price_ask") + "</p>";
       box.innerHTML = html;
       box.hidden = false;
+      wireControls();
       return;
     }
     html += '<p class="cal-quote__title">' + t("price_title") + "</p>";
@@ -306,29 +372,39 @@
           '</span><span class="cal-quote__tot">' + money(q.total) + "</span>" +
           '<span class="cal-quote__det">' + lines.join(" · ") + "</span></div>";
       });
+    html += '<button type="button" id="qBook" class="btn btn--block btn--sm">' +
+      t("price_request") + "</button>";
     box.innerHTML = html;
     box.hidden = false;
+    wireControls();
+    var book = $("#qBook");
+    if (book) book.addEventListener("click", function () {
+      // Only now are the personal details asked for, with the dates, the
+      // guests and any code already carried over.
+      var f = $("#fGuests"); if (f) f.value = String(quoteGuests);
+      var c = $("#fCoupon"); if (c && quoteCoupon) c.value = quoteCoupon;
+      var i = $("#fIn"); if (i) i.value = selStart;
+      var o = $("#fOut"); if (o) o.value = selEnd;
+      var book2 = document.getElementById("book");
+      if (book2) book2.scrollIntoView({ behavior: "smooth", block: "start" });
+      var name = $("#fName"); if (name) setTimeout(function () { name.focus(); }, 400);
+    });
   }
 
-  function refreshQuote() {
-    var box = $("#calQuote");
-    if (!box) return;
-    if (!selStart || !selEnd) { box.hidden = true; box.innerHTML = ""; return; }
-    var guests = ($("#fGuests") && $("#fGuests").value) || "2";
-    var coupon = ($("#fCoupon") && $("#fCoupon").value.trim()) || "";
+  function askQuote() {
+    if (!selStart || !selEnd) return;
     var seq = ++quoteSeq;
-    box.hidden = false;
-    box.innerHTML = '<p class="cal-quote__title">' + t("price_loading") + "</p>";
+    showPrompt(true);
     Promise.all(UNIT_KEYS.map(function (u) {
       var url = API + "/api/quote?unit=" + u + "&from=" + selStart + "&to=" + selEnd +
-        "&guests=" + encodeURIComponent(guests) +
-        (coupon ? "&coupon=" + encodeURIComponent(coupon) : "");
+        "&guests=" + encodeURIComponent(quoteGuests) +
+        (quoteCoupon ? "&coupon=" + encodeURIComponent(quoteCoupon) : "");
       return fetch(url, { cache: "no-store" })
         .then(function (r) { return r.ok ? r.json() : null; })
         .catch(function () { return null; });
     })).then(function (results) {
       // A slower answer to an older selection must not overwrite a newer
-      // one: the guest clicks faster than the network replies.
+      // one: the visitor clicks faster than the network replies.
       if (seq !== quoteSeq) return;
       var withUnit = results.map(function (r, i) {
         return r ? Object.assign({ unit: UNIT_KEYS[i] }, r) : null;
@@ -336,15 +412,6 @@
       var cp = null;
       withUnit.forEach(function (r) { if (r && r.coupon) cp = r.coupon; });
       renderQuotes(withUnit, cp);
-    });
-  }
-
-  if ($("#fGuests")) $("#fGuests").addEventListener("change", refreshQuote);
-  if ($("#fCoupon")) {
-    var couponTimer = null;
-    $("#fCoupon").addEventListener("input", function () {
-      clearTimeout(couponTimer);
-      couponTimer = setTimeout(refreshQuote, 600);
     });
   }
 
@@ -360,7 +427,9 @@
       if (selStart) { var i = $("#fIn"); if (i) i.value = selStart; }
       if (selEnd) { var o = $("#fOut"); if (o) o.value = selEnd; }
       render();
-      refreshQuote();
+      // Choosing dates offers the price; it does not fetch it. One click
+      // more, three requests fewer while the visitor is still picking.
+      showPrompt();
     });
     $("#calPrev").addEventListener("click", function () {
       var m = new Date(view.getFullYear(), view.getMonth() - 1, 1);

@@ -125,6 +125,14 @@ h1,h2,h3{font-family:"Fraunces",Georgia,serif;font-weight:600;line-height:1.15;m
 .cal-quote__title{font-size:.82rem;color:var(--muted);font-weight:600;margin:0 0 8px}
 .cal-quote__bad{font-size:.82rem;color:#b4452f;margin:0 0 8px}
 .cal-quote__none{font-size:.88rem;color:var(--muted);margin:0}
+.cal-quote__ask{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
+.cal-quote__lbl{font-size:.82rem;color:var(--muted)}
+.cal-quote__sel,.cal-quote__code{padding:8px 10px;border:1px solid var(--line);border-radius:8px;
+  font:inherit;font-size:.9rem;background:#fff}
+.cal-quote__code{min-width:180px}
+.btn--sm{padding:8px 16px;font-size:.88rem}
+.cal-quote__link{background:none;border:0;padding:0;font:inherit;font-size:.8rem;color:var(--muted);
+  text-decoration:underline;cursor:pointer;margin-bottom:10px}
 .cal-quote__row{display:grid;grid-template-columns:1fr auto;gap:2px 12px;align-items:baseline;
   padding:8px 0;border-bottom:1px solid var(--line)}
 .cal-quote__row:last-child{border-bottom:0}
