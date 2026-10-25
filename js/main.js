@@ -478,6 +478,19 @@
     // pagina, e ripeterlo qui non aggiunge niente.
     if (sub) sub.textContent = t("rev_sub");
 
+    // Mese e anno invece di "6 giorni fa".
+    //
+    // La frase relativa vale solo nel momento in cui e' stata letta: se
+    // l'importazione notturna si ferma, fra sei mesi il sito direbbe
+    // ancora "6 giorni fa". Un mese e un anno non invecchiano.
+    function quando(r) {
+      if (!r.date) return r.when || "";
+      var p = r.date.split("-");
+      var MO = t("months");
+      var nome = MO && MO[Number(p[1]) - 1];
+      return nome ? nome + " " + p[0] : r.date;
+    }
+
     function stars(n) {
       if (!n) return "";
       // Stelle piene e vuote, piu' il numero: le stelle si leggono di
@@ -504,7 +517,7 @@
           escapeHtml(r.body) + "</blockquote>" + note +
           '<figcaption class="review__by">' +
           "<strong>" + escapeHtml(r.author) + "</strong>" +
-          (r.when ? ' <span class="review__when">' + escapeHtml(r.when) + "</span>" : "") +
+          (quando(r) ? ' <span class="review__when">' + escapeHtml(quando(r)) + "</span>" : "") +
           (unit ? ' <span class="review__unit">' + escapeHtml(unit) + "</span>" : "") +
           "</figcaption></figure>";
       }).join("");
