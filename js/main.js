@@ -46,10 +46,8 @@
   // availability.json (che fornisce comunque minNights e contactEmail).
   var API = "https://checkin.mascarella89.com";
   var AVAIL_FEED = API + "/api/availability";
-  // Prices come from the same place, fed nightly by Airbnb's own calendar.
-  // If this call fails the calendar still works: it simply shows no prices,
-  // which is the right way to fail — a missing price is noticed, a wrong
-  // one is not.
+  // No price feed is loaded here: prices are asked for one stay at a time,
+  // only after the visitor has chosen dates.
   Promise.all([
     fetch("availability.json", { cache: "no-store" })
       .then(function (r) { return r.ok ? r.json() : null; })
@@ -57,13 +55,10 @@
     fetch(AVAIL_FEED, { cache: "no-store" })
       .then(function (r) { return r.ok ? r.json() : null; })
       .catch(function () { return null; }),
-    fetch(API + "/api/prices?months=12", { cache: "no-store" })
-      .then(function (r) { return r.ok ? r.json() : null; })
-      .catch(function () { return null; })
+    Promise.resolve(null)
   ]).then(function (res) {
     var cfg = res[0] || { booked: [], contactEmail: "" };
     var feed = res[1];
-    cfg.prices = res[2];
     if (feed && (Array.isArray(feed.sopra) || Array.isArray(feed.sotto))) {
       cfg.sopra = feed.sopra || [];
       cfg.sotto = feed.sotto || [];
@@ -105,22 +100,12 @@
     expandInto(cfg.booked, mAll);
     Object.keys(mAll).forEach(function (k) { occ[k] = 2; });
   }
-  // The cheapest unit that is free on a given night, used for the little
-  // "from EUR x" under each day. Nothing is computed here beyond the
-  // minimum: the real totals are worked out by the server, so the formula
-  // lives in one place only.
+  // Deliberately no price on the calendar itself. A visitor browsing the
+  // months sees only what is free; the price appears once they pick dates
+  // and ask, which is also when it means something — a nightly rate on
+  // its own says nothing about cleaning, length-of-stay discounts or the
+  // tourist tax.
   var UNIT_KEYS = ["TUTTO", "SOTTO", "SOPRA"];
-  var dayPrice = {};
-  if (cfg.prices && cfg.prices.units) {
-    UNIT_KEYS.forEach(function (u) {
-      var info = cfg.prices.units[u];
-      if (!info || !info.days) return;
-      info.days.forEach(function (d) {
-        if (!d.available || d.price == null) return;
-        if (dayPrice[d.day] == null || d.price < dayPrice[d.day]) dayPrice[d.day] = d.price;
-      });
-    });
-  }
 
   var isFull = function (d) { return (occ[ymd(d)] || 0) >= 2; };
   var isPartial = function (d) { return (occ[ymd(d)] || 0) === 1; };
@@ -225,12 +210,6 @@
         cell.classList.add("free");
         if (isPartial(d)) cell.classList.add("partial");
         cell.dataset.date = ds;
-        if (dayPrice[ds] != null) {
-          var tag = document.createElement("span");
-          tag.className = "cal-price";
-          tag.textContent = "€" + Math.round(dayPrice[ds]);
-          cell.appendChild(tag);
-        }
         if (selStart && ds === selStart) cell.classList.add("sel");
         if (selEnd && ds === selEnd) cell.classList.add("sel");
         if (selStart && selEnd && ds > selStart && ds < selEnd) cell.classList.add("inrange");
