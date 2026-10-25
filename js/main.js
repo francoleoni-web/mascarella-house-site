@@ -458,7 +458,8 @@
     var list = $("#revList");
     if (!section || !list || !data || !data.reviews || !data.reviews.length) return;
     var all = data.reviews;
-    var shown = 6;
+    var STEP = 6;
+    var shown = STEP;
 
     // Il voto in cima alla pagina: e' la prima cosa che convince, e qui
     // e' un numero vero, non una grafica. Se le recensioni non arrivano
@@ -479,10 +480,21 @@
         all.length + " " + t("rev_sub");
     }
 
+    function stars(n) {
+      if (!n) return "";
+      // Stelle piene e vuote, piu' il numero: le stelle si leggono di
+      // colpo, il numero toglie ogni dubbio su quante siano.
+      var full = "";
+      for (var i = 1; i <= 5; i++) full += i <= n ? "★" : "☆";
+      return '<span class="review__stars" aria-label="' + n + '/5">' + full +
+        '<span class="review__score">' + n + "</span></span>";
+    }
+
     function draw() {
       list.innerHTML = all.slice(0, shown).map(function (r) {
         var unit = r.unit && UNIT_SHORT[r.unit] ? t(UNIT_SHORT[r.unit]) : "";
         return '<figure class="review">' +
+          stars(r.rating) +
           '<blockquote class="review__text">' + escapeHtml(r.body) + "</blockquote>" +
           '<figcaption class="review__by">' +
           "<strong>" + escapeHtml(r.author) + "</strong>" +
@@ -490,8 +502,6 @@
           (unit ? ' <span class="review__unit">' + escapeHtml(unit) + "</span>" : "") +
           "</figcaption></figure>";
       }).join("");
-      var more = $("#revMore");
-      if (more) more.hidden = shown >= all.length;
     }
 
     draw();
@@ -502,11 +512,13 @@
       // vecchio ascoltatore punterebbe alla lista precedente.
       var fresh = more.cloneNode(true);
       more.parentNode.replaceChild(fresh, more);
-      fresh.textContent = t("rev_all").replace("{n}", all.length);
+      fresh.textContent = t("rev_all");
+      // Sei alla volta, non tutte in blocco: trenta schede aperte di
+      // colpo spingono il resto della pagina fuori dalla vista.
       fresh.addEventListener("click", function () {
-        shown = all.length;
+        shown = Math.min(shown + STEP, all.length);
         draw();
-        fresh.hidden = true;
+        fresh.hidden = shown >= all.length;
       });
       fresh.hidden = shown >= all.length;
     }
