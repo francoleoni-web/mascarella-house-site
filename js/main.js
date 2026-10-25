@@ -498,16 +498,31 @@
     draw();
     section.hidden = false;
     var more = $("#revMore");
-    if (more) more.addEventListener("click", function () {
-      shown = all.length;
-      draw();
-    });
+    if (more) {
+      // Sostituito invece di riusato: ricaricando in un'altra lingua il
+      // vecchio ascoltatore punterebbe alla lista precedente.
+      var fresh = more.cloneNode(true);
+      more.parentNode.replaceChild(fresh, more);
+      fresh.addEventListener("click", function () {
+        shown = all.length;
+        draw();
+        fresh.hidden = true;
+      });
+      fresh.hidden = shown >= all.length;
+    }
   }
 
-  fetch(API + "/api/reviews", { cache: "no-store" })
-    .then(function (r) { return r.ok ? r.json() : null; })
-    .then(buildReviews)
-    .catch(function () { /* sezione nascosta */ });
+  // Le recensioni arrivano gia' tradotte nella lingua scelta: la
+  // traduzione e' fatta una volta all'importazione, non qui, cosi' il
+  // visitatore non aspetta nessun traduttore.
+  function loadReviews() {
+    fetch(API + "/api/reviews?lang=" + encodeURIComponent(LANG), { cache: "no-store" })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(buildReviews)
+      .catch(function () { /* sezione nascosta */ });
+  }
+  window.__reloadReviews = loadReviews;
+  loadReviews();
 
   /* ---------- FORM (mailto) ---------- */
   var form = $("#bookForm");
@@ -561,6 +576,9 @@
       LANG = I18N[sel.value] ? sel.value : "it";
       try { localStorage.setItem(STORE_KEY, LANG); } catch (e) {}
       applyI18n();
+      // Le recensioni non sono testo del sito: vanno richieste di nuovo,
+      // perche' la loro traduzione vive sul server.
+      if (window.__reloadReviews) window.__reloadReviews();
     });
   }
 
