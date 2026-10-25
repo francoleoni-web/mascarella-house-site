@@ -460,6 +460,19 @@
     var all = data.reviews;
     var shown = 6;
 
+    // Il voto in cima alla pagina: e' la prima cosa che convince, e qui
+    // e' un numero vero, non una grafica. Se le recensioni non arrivano
+    // resta nascosto.
+    var hero = document.getElementById("heroRating");
+    if (hero && data.average) {
+      hero.innerHTML =
+        '<span class="hero__rating-num">★ ' +
+        data.average.toFixed(2).replace(".", ",") +
+        '</span><span class="hero__rating-sub">' +
+        all.length + " " + t("rev_sub") + "</span>";
+      hero.hidden = false;
+    }
+
     var sub = $("#revSub");
     if (sub) {
       sub.textContent =
