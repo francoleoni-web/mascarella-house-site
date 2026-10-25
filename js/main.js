@@ -478,17 +478,34 @@
     // pagina, e ripeterlo qui non aggiunge niente.
     if (sub) sub.textContent = t("rev_sub");
 
-    // Mese e anno invece di "6 giorni fa".
+    // "6 giorni fa" per le recenti, "ottobre 2026" per le altre.
     //
-    // La frase relativa vale solo nel momento in cui e' stata letta: se
-    // l'importazione notturna si ferma, fra sei mesi il sito direbbe
-    // ancora "6 giorni fa". Un mese e un anno non invecchiano.
+    // La frase la calcoliamo noi dalla data fissata alla prima lettura,
+    // non la copiamo da Airbnb: quella vale solo nell'istante in cui e'
+    // stata letta, e se l'importazione notturna si ferma il sito
+    // direbbe "6 giorni fa" per sempre. Calcolata qui resta vera anche
+    // se nessuno importa piu' niente.
+    //
+    // Intl.RelativeTimeFormat conosce i plurali di tutte e undici le
+    // lingue: il russo ne ha tre forme e l'arabo sei, e scriverle a mano
+    // sarebbe un errore in attesa di accadere.
+    var GIORNO = 86400000;
     function quando(r) {
       if (!r.date) return r.when || "";
       var p = r.date.split("-");
       var MO = t("months");
-      var nome = MO && MO[Number(p[1]) - 1];
-      return nome ? nome + " " + p[0] : r.date;
+      var meseAnno = MO && MO[Number(p[1]) - 1]
+        ? MO[Number(p[1]) - 1] + " " + p[0]
+        : r.date;
+      var giorni = Math.round((today - new Date(+p[0], +p[1] - 1, +p[2])) / GIORNO);
+      if (!isFinite(giorni) || giorni < 0 || giorni >= 30) return meseAnno;
+      try {
+        var rtf = new Intl.RelativeTimeFormat(LANG, { numeric: "auto" });
+        if (giorni < 7) return rtf.format(-giorni, "day");
+        return rtf.format(-Math.floor(giorni / 7), "week");
+      } catch (e) {
+        return meseAnno;
+      }
     }
 
     function stars(n) {
