@@ -468,8 +468,7 @@
       hero.innerHTML =
         '<span class="hero__rating-num">★ ' +
         data.average.toFixed(2).replace(".", ",") +
-        '</span><span class="hero__rating-sub">' +
-        all.length + " " + t("rev_sub") + "</span>";
+        '</span><span class="hero__rating-sub">' + t("rev_outof") + "</span>";
       hero.hidden = false;
     }
 
@@ -503,6 +502,7 @@
       // vecchio ascoltatore punterebbe alla lista precedente.
       var fresh = more.cloneNode(true);
       more.parentNode.replaceChild(fresh, more);
+      fresh.textContent = t("rev_all").replace("{n}", all.length);
       fresh.addEventListener("click", function () {
         shown = all.length;
         draw();
