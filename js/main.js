@@ -281,7 +281,10 @@
       t("form_email") + ": " + f.email.value + "\n" +
       t("form_in") + ": " + (f.checkin.value || "—") + "\n" +
       t("form_out") + ": " + (f.checkout.value || "—") + "\n" +
-      t("form_guests") + ": " + f.guests.value + "\n\n" +
+      t("form_guests") + ": " + f.guests.value + "\n" +
+      // Mostra da quale messaggio arriva chi scrive: il codice e' l'unico
+      // modo per sapere se un messaggio post-soggiorno ha funzionato.
+      t("form_coupon") + ": " + (f.coupon && f.coupon.value ? f.coupon.value : "—") + "\n\n" +
       t("form_msg") + ":\n" + (f.message.value || "—");
     window.location.href = "mailto:" + (cfg.contactEmail || "") +
       "?subject=" + encodeURIComponent(t("mail_subject")) + "&body=" + encodeURIComponent(body);
