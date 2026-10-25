@@ -283,3 +283,13 @@ h1,h2,h3{font-family:"Fraunces",Georgia,serif;font-weight:600;line-height:1.15;m
 .guide-teaser__ov{position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,15,8,.45),rgba(20,15,8,.7))}
 .guide-teaser__in{position:relative;padding:84px 24px;display:flex;flex-direction:column;align-items:center;gap:1.1rem}
 .guide-teaser__in p{color:rgba(255,255,255,.92);max-width:52ch;margin:0}
+
+/* Recensioni importate da Airbnb */
+.reviews{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;margin-top:8px}
+.review{margin:0;padding:18px;border:1px solid var(--line);border-radius:12px;background:#fff}
+.review__text{margin:0 0 12px;font-size:.92rem;line-height:1.55}
+.review__by{font-size:.8rem;color:var(--muted)}
+.review__when{margin-left:.4rem}
+.review__unit{display:inline-block;margin-left:.4rem;padding:1px 8px;border-radius:999px;
+  background:var(--cream-2);font-size:.7rem}
+#revMore{margin-top:18px}

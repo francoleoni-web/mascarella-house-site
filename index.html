@@ -23,6 +23,7 @@
         <a href="#about" data-i18n="nav_about">L'alloggio</a>
         <a href="#amenities" data-i18n="nav_amenities">Servizi</a>
         <a href="#calendar" data-i18n="nav_calendar">Disponibilità</a>
+        <a href="#reviews" data-i18n="rev_title">Recensioni</a>
         <a href="#location" data-i18n="nav_location">Dove siamo</a>
         <a href="guide.html" data-i18n="nav_guide">Guida</a>
       </nav>
@@ -189,6 +190,18 @@
       <h2 class="section__title" data-i18n="guide_t">Bologna in 3 giorni</h2>
       <p data-i18n="guide_d">I posti del cuore dei tuoi host: cosa vedere, dove mangiare e gli angoli nascosti.</p>
       <a class="btn" href="guide.html" data-i18n="guide_cta">Apri la guida</a>
+    </div>
+  </section>
+
+  <!-- Le recensioni arrivano dagli annunci Airbnb, importate ogni notte.
+       La sezione resta nascosta finche' non ce ne sono: meglio assente
+       che vuota. -->
+  <section id="reviews" class="section" hidden>
+    <div class="container">
+      <h2 class="section__title" data-i18n="rev_title">Cosa dicono gli ospiti</h2>
+      <p class="section__sub" id="revSub"></p>
+      <div class="reviews" id="revList"></div>
+      <button type="button" class="btn btn--ghost btn--sm" id="revMore" hidden data-i18n="rev_all">Mostra tutte</button>
     </div>
   </section>
 

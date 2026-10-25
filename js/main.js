@@ -441,6 +441,61 @@
     });
   }
 
+  /* ---------- RECENSIONI ---------- */
+  // Vengono dagli annunci Airbnb e sono gia' pubbliche la', con il solo
+  // nome di battesimo. Se la chiamata fallisce la sezione resta nascosta:
+  // una sezione "Cosa dicono gli ospiti" vuota dice la cosa sbagliata.
+  var UNIT_SHORT = { TUTTO: "stays_whole_t", SOTTO: "stays_first_t", SOPRA: "stays_second_t" };
+
+  function escapeHtml(x) {
+    return String(x).replace(/[&<>"]/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
+    });
+  }
+
+  function buildReviews(data) {
+    var section = document.getElementById("reviews");
+    var list = $("#revList");
+    if (!section || !list || !data || !data.reviews || !data.reviews.length) return;
+    var all = data.reviews;
+    var shown = 6;
+
+    var sub = $("#revSub");
+    if (sub) {
+      sub.textContent =
+        (data.average ? data.average.toFixed(2).replace(".", ",") + " ★ · " : "") +
+        all.length + " " + t("rev_sub");
+    }
+
+    function draw() {
+      list.innerHTML = all.slice(0, shown).map(function (r) {
+        var unit = r.unit && UNIT_SHORT[r.unit] ? t(UNIT_SHORT[r.unit]) : "";
+        return '<figure class="review">' +
+          '<blockquote class="review__text">' + escapeHtml(r.body) + "</blockquote>" +
+          '<figcaption class="review__by">' +
+          "<strong>" + escapeHtml(r.author) + "</strong>" +
+          (r.when ? ' <span class="review__when">' + escapeHtml(r.when) + "</span>" : "") +
+          (unit ? ' <span class="review__unit">' + escapeHtml(unit) + "</span>" : "") +
+          "</figcaption></figure>";
+      }).join("");
+      var more = $("#revMore");
+      if (more) more.hidden = shown >= all.length;
+    }
+
+    draw();
+    section.hidden = false;
+    var more = $("#revMore");
+    if (more) more.addEventListener("click", function () {
+      shown = all.length;
+      draw();
+    });
+  }
+
+  fetch(API + "/api/reviews", { cache: "no-store" })
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(buildReviews)
+    .catch(function () { /* sezione nascosta */ });
+
   /* ---------- FORM (mailto) ---------- */
   var form = $("#bookForm");
   if (form) form.addEventListener("submit", function (e) {
