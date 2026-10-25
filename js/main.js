@@ -491,17 +491,44 @@
     }
 
     function draw() {
-      list.innerHTML = all.slice(0, shown).map(function (r) {
+      list.innerHTML = all.slice(0, shown).map(function (r, i) {
         var unit = r.unit && UNIT_SHORT[r.unit] ? t(UNIT_SHORT[r.unit]) : "";
+        // Chi legge ha diritto di sapere che non sta leggendo le parole
+        // dell'ospite, e di poterle vedere comunque.
+        var note = r.translated && r.original
+          ? '<p class="review__tr">' + t("rev_translated") +
+            ' · <button type="button" class="review__toggle" data-i="' + i +
+            '">' + t("rev_seeorig") + "</button></p>"
+          : "";
         return '<figure class="review">' +
           stars(r.rating) +
-          '<blockquote class="review__text">' + escapeHtml(r.body) + "</blockquote>" +
+          '<blockquote class="review__text" data-body="' + i + '">' +
+          escapeHtml(r.body) + "</blockquote>" + note +
           '<figcaption class="review__by">' +
           "<strong>" + escapeHtml(r.author) + "</strong>" +
           (r.when ? ' <span class="review__when">' + escapeHtml(r.when) + "</span>" : "") +
           (unit ? ' <span class="review__unit">' + escapeHtml(unit) + "</span>" : "") +
           "</figcaption></figure>";
       }).join("");
+    }
+
+    // Un solo ascoltatore sulla lista invece di uno per scheda: le schede
+    // vengono ridisegnate a ogni "Mostra altre" e a ogni cambio lingua.
+    if (!list.dataset.wired) {
+      list.dataset.wired = "1";
+      list.addEventListener("click", function (e) {
+        var btn = e.target.closest(".review__toggle");
+        if (!btn) return;
+        var i = Number(btn.dataset.i);
+        var r = all[i];
+        if (!r || !r.original) return;
+        var block = list.querySelector('[data-body="' + i + '"]');
+        if (!block) return;
+        var showingOriginal = btn.dataset.orig === "1";
+        block.textContent = showingOriginal ? r.body : r.original;
+        btn.dataset.orig = showingOriginal ? "0" : "1";
+        btn.textContent = showingOriginal ? t("rev_seeorig") : t("rev_seetrans");
+      });
     }
 
     draw();
