@@ -298,8 +298,10 @@ h1,h2,h3{font-family:"Fraunces",Georgia,serif;font-weight:600;line-height:1.15;m
 
 /* Voto medio nella hero */
 .hero__rating{display:inline-flex;align-items:baseline;gap:.5rem;margin:18px 0 6px;padding:12px 22px;
-  border-radius:999px;background:rgba(255,255,255,.95);text-decoration:none;color:inherit;
-  box-shadow:0 2px 14px rgba(0,0,0,.16)}
+  border-radius:999px;background:rgba(255,255,255,.95);text-decoration:none;
+  /* Non "inherit": nella hero il testo e' bianco perche' sta sopra la
+     foto, e il voto finiva bianco su bianco. */
+  color:#2b2a26;box-shadow:0 2px 14px rgba(0,0,0,.16)}
 .hero__rating-num{font-weight:800;font-size:1.9rem;line-height:1;white-space:nowrap;letter-spacing:-.01em}
 .hero__rating-sub{font-size:.95rem;color:var(--muted);font-weight:600}
 @media (max-width:640px){.hero__rating-num{font-size:1.6rem}}
