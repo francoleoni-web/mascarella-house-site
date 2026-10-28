@@ -14,7 +14,7 @@
 
   // Order and labels follow js/i18n.js so these pages read like the rest
   // of the site. Arabic is the only right-to-left entry.
-  var LANGS = ["it", "en", "de", "es", "fr", "pt", "ru", "zh", "el", "ar", "ja"];
+  var LANGS = ["it", "en", "de", "es", "fr", "pt", "ro", "ru", "zh", "el", "ar", "ja"];
   var LABELS = {
     it: "Italiano",
     en: "English",
@@ -22,6 +22,7 @@
     es: "Español",
     fr: "Français",
     pt: "Português",
+    ro: "Română",
     ru: "Русский",
     zh: "中文",
     el: "Ελληνικά",
@@ -59,6 +60,10 @@
       pt: {
         title: "Como pegar as chaves",
         sub: "O vídeo mostra onde fica a caixa das chaves na entrada, como inserir o código e onde devolver as chaves na partida.",
+      },
+      ro: {
+        title: "Cum se ridică cheile",
+        sub: "Videoclipul arată unde se află cutia de chei la intrare, cum se introduce codul și unde se pun cheile la plecare.",
       },
       ru: {
         title: "Как забрать ключи",
@@ -106,6 +111,10 @@
         title: "Apartamento 1 — como chegar",
         sub: "O vídeo mostra o percurso desde a porta da rua até à porta do apartamento 1, andar a andar.",
       },
+      ro: {
+        title: "Apartamentul 1 — cum se ajunge",
+        sub: "Videoclipul arată drumul de la poarta de la stradă până la ușa apartamentului 1, etaj cu etaj.",
+      },
       ru: {
         title: "Квартира 1 — как добраться",
         sub: "В видео показан путь от входной двери до двери квартиры 1, этаж за этажом.",
@@ -151,6 +160,10 @@
       pt: {
         title: "Apartamento 2 — como chegar",
         sub: "O vídeo mostra o percurso desde a porta da rua até à porta do apartamento 2, andar a andar.",
+      },
+      ro: {
+        title: "Apartamentul 2 — cum se ajunge",
+        sub: "Videoclipul arată drumul de la poarta de la stradă până la ușa apartamentului 2, etaj cu etaj.",
       },
       ru: {
         title: "Квартира 2 — как добраться",
